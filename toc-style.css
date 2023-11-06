@@ -1,0 +1,23 @@
+/* Style the table of contents container */
+.toc {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Style the list items in the TOC */
+.toc ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.toc li {
+    margin: 5px 0;
+}
+
+/* Style the links in the TOC */
+.toc a {
+    text-decoration: none;
+    color: #0073e6;
+}
