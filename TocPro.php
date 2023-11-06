@@ -13,17 +13,42 @@ function generate_table_of_contents($content) {
 
         if (!empty($matches[0])) {
             $toc = '<div class="toc"><h2>Table of Contents</h2><ul>';
+
+            $stack = array(); // Stack to keep track of heading levels
+
             foreach ($matches[1] as $index => $level) {
                 $id = 'toc-' . sanitize_title_with_dashes(strip_tags($matches[0][$index]));
-                $toc .= '<li><a href="#' . $id . '">' . strip_tags($matches[0][$index]) . '</a></li>';
+
+                if ($level == 2) {
+                    // Main heading
+                    $toc .= '<li><a href="#' . $id . '">' . strip_tags($matches[0][$index]) . '</a></li>';
+                } else {
+                    // Subheading - determine nesting based on heading level
+                    while (count($stack) > 0 && $level <= end($stack)) {
+                        array_pop($stack);
+                        $toc .= '</ul></li>';
+                    }
+                    $toc .= '<li><a href="#' . $id . '">' . strip_tags($matches[0][$index]) . '</a>';
+                }
+
+                array_push($stack, $level);
+
                 $content = str_replace($matches[0][$index], '<h' . $level . ' id="' . $id . '">' . strip_tags($matches[0][$index]) . '</h' . $level . '>', $content);
             }
+
+            // Close any open subheading lists
+            while (count($stack) > 1) {
+                array_pop($stack);
+                $toc .= '</ul></li>';
+            }
+
             $toc .= '</ul></div>';
             $content = $toc . $content;
         }
     }
     return $content;
 }
+
 add_filter('the_content', 'generate_table_of_contents');
 
 function register_toc_styles() {
