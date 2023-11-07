@@ -5,14 +5,18 @@ Description: Creates a table of contents for selected pages, posts, and media.
 Version: 1.0.0
 Author: Jestin Joseph
 */
-
 function generate_table_of_contents($content) {
     if (is_single() || is_page()) {
         $pattern = '/<h([2-6])[^>]*>.*?<\/h\1>/i'; // Regular expression to match headings h2-h6
         preg_match_all($pattern, $content, $matches);
 
         if (!empty($matches[0])) {
-            $toc = '<div class="toc"><h2>Table of Contents</h2><ul>';
+            $toc = '<div class="toc">';
+            
+            // Add the progress bar HTML
+            $toc .= '<div class="toc-progress-bar"></div>';
+            
+            $toc .= '<h2>Table of Contents</h2><ul>';
 
             $stack = array(); // Stack to keep track of heading levels
 
@@ -48,6 +52,7 @@ function generate_table_of_contents($content) {
     }
     return $content;
 }
+
 
 add_filter('the_content', 'generate_table_of_contents');
 
