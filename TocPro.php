@@ -21,8 +21,8 @@ function generate_table_of_contents($content) {
                 $toc .= '<div class="toc-progress-bar"></div>';
             }
 
-            $toc .= '<h2>Table of Contents</h2><ul>';
-
+            $toc .= '<h2>Table of Contents</h2>';
+            $toc .='<ul>';
             $stack = array(); // Stack to keep track of heading levels
 
             foreach ($matches[1] as $index => $level) {
@@ -31,7 +31,6 @@ function generate_table_of_contents($content) {
                 $words = explode(' ', $headingText);
                 $shortenedText = implode(' ', array_slice($words, 0, 5)); // Limit to 5 words
                 $hasMoreContent = count($words) > 5; // Check if there are more words
-
                 if ($level == 2) {
                     // Main heading
                     $toc .= '<li><a href="#' . $id . '">' . $shortenedText;
