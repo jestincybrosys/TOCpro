@@ -22,7 +22,7 @@ function generate_table_of_contents($content) {
             }
 
             $toc .= '<h2>Table of Contents</h2>';
-            $toc .='<ul>';
+            $toc .='<ol>';
             $stack = array(); // Stack to keep track of heading levels
 
             foreach ($matches[1] as $index => $level) {
@@ -33,22 +33,22 @@ function generate_table_of_contents($content) {
                 $hasMoreContent = count($words) > 5; // Check if there are more words
                 if ($level == 2) {
                     // Main heading
+                    $toc .= '<ol><li><a href="#' . $id . '">' . $shortenedText;
+                    if ($hasMoreContent) {
+                        $toc .= '...'; // Add ellipsis if there's more content
+                    }
+                    $toc .= '</a></li></ol>';
+                } else {
+                    // Subheading - determine nesting based on heading level
+                    while (count($stack) > 0 && $level <= end($stack)) {
+                        array_pop($stack);
+                        $toc .= '</li>';
+                    }
                     $toc .= '<li><a href="#' . $id . '">' . $shortenedText;
                     if ($hasMoreContent) {
                         $toc .= '...'; // Add ellipsis if there's more content
                     }
                     $toc .= '</a></li>';
-                } else {
-                    // Subheading - determine nesting based on heading level
-                    while (count($stack) > 0 && $level <= end($stack)) {
-                        array_pop($stack);
-                        $toc .= '</ul></li>';
-                    }
-                    $toc .= '<li><a href="#' . $id . '">' . $shortenedText;
-                    if ($hasMoreContent) {
-                        $toc .= '...'; // Add ellipsis if there's more content
-                    }
-                    $toc .= '</a>';
                 }
 
                 array_push($stack, $level);
@@ -59,10 +59,10 @@ function generate_table_of_contents($content) {
             // Close any open subheading lists
             while (count($stack) > 1) {
                 array_pop($stack);
-                $toc .= '</ul></li>';
+                $toc .= '</li></ol>';
             }
 
-            $toc .= '</ul></div>';
+            $toc .= '</ol></div>';
             $content = $toc . $content;
         }
     }
@@ -71,7 +71,7 @@ function generate_table_of_contents($content) {
 
 // Add a menu to enable or disable the table of contents
 function add_plugin_menu() {
-    add_menu_page('TocPro Settings', 'TocPro', 'manage_options', 'tocpro-settings', 'plugin_settings_page', '', 30);
+    add_menu_page('TocPro Settings', 'TOCPro', 'manage_options', 'tocpro-settings', 'plugin_settings_page', '', 30);
 }
 
 // Modify the settings page to include color picker fields
