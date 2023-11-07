@@ -8,9 +8,8 @@ Author: Jestin Joseph
 
 // Function to generate table of contents
 function generate_table_of_contents($content) {
-    // Check if the option to enable the table of contents is set
     if (get_option('enable_table_of_contents') == '1' && (is_single() || is_page())) {
-        $pattern = '/<h([2-6])[^>]*>.*?<\/h\1>/i'; // Regular expression to match headings h2-h6
+        $pattern = '/<h([2-6])[^>]*>.*?<\/h\1>/i';
         preg_match_all($pattern, $content, $matches);
 
         if (!empty($matches[0])) {
@@ -23,43 +22,33 @@ function generate_table_of_contents($content) {
 
             $toc .= '<h2>Table of Contents</h2>';
             $toc .='<ol>';
-            $stack = array(); // Stack to keep track of heading levels
+            $stack = array();
 
             foreach ($matches[1] as $index => $level) {
                 $id = 'toc-' . sanitize_title_with_dashes(strip_tags($matches[0][$index]));
                 $headingText = strip_tags($matches[0][$index]);
                 $words = explode(' ', $headingText);
-                $shortenedText = implode(' ', array_slice($words, 0, 5)); // Limit to 5 words
-                $hasMoreContent = count($words) > 5; // Check if there are more words
+                $shortenedText = implode(' ', array_slice($words, 0, 5)); 
+                $hasMoreContent = count($words) > 5; 
                 if ($level == 2) {
                     // Main heading
-                    $toc .= '<ol><li><a href="#' . $id . '">' . $shortenedText;
-                    if ($hasMoreContent) {
-                        $toc .= '...'; // Add ellipsis if there's more content
-                    }
-                    $toc .= '</a></li></ol>';
-                } else {
-                    // Subheading - determine nesting based on heading level
-                    while (count($stack) > 0 && $level <= end($stack)) {
-                        array_pop($stack);
-                        $toc .= '</li>';
-                    }
                     $toc .= '<li><a href="#' . $id . '">' . $shortenedText;
                     if ($hasMoreContent) {
-                        $toc .= '...'; // Add ellipsis if there's more content
+                        $toc .= '...'; 
                     }
                     $toc .= '</a></li>';
+                } else {
+
+                    $toc .= '<ol><li><a href="#' . $id . '">' . $shortenedText;
+                    if ($hasMoreContent) {
+                        $toc .= '...'; 
+                    }
+                    $toc .= '</a></li></ol>';
                 }
 
                 array_push($stack, $level);
 
                 $content = str_replace($matches[0][$index], '<h' . $level . ' id="' . $id . '">' . strip_tags($matches[0][$index]) . '</h' . $level . '>', $content);
-            }
-
-            // Close any open subheading lists
-            while (count($stack) > 1) {
-                array_pop($stack);
-                $toc .= '</li></ol>';
             }
 
             $toc .= '</ol></div>';
