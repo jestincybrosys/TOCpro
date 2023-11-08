@@ -13,9 +13,7 @@ function generate_table_of_contents($content) {
 
         if (!empty($matches[0])) {
             $toc = '<div class="tocpro">';
-            if (get_option('enable_progress_bar') == '1') {
-                $toc .= '<div class="tocpro-progress-bar"></div>';
-            }
+    
             $toc .= '<h2>Table of Contents</h2>';
             $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; 
             $stack = array();
@@ -59,6 +57,17 @@ function generate_table_of_contents($content) {
     return $content;
 }
 
+function generate_individual_progress_bar($content) {
+    if (get_option('enable_table_of_contents') == '1' && (is_single() || is_page())) {
+            $progress_bar = '<div class="tocpro-progress-bar"></div>';
+            $content = $progress_bar . $content;
+        
+    }
+
+    return $content;
+}
+
+
 function add_plugin_menu() {
     add_menu_page('TocPro Settings', 'TOCPro', 'manage_options', 'tocpro-settings', 'plugin_settings_page', '', 30);
 }
@@ -67,7 +76,74 @@ function plugin_settings_page() {
     ?>
     <div class="wrap">
         <div class="wrap tocpro-main">
-        <h2>TOCPro Settings</h2>
+        <div class="tocpro-head"><h2>TOCPro Settings</h2></div>
+    <div class="position-div">
+        <header class="tacpro-div-head">
+            <a href="#genaral"><img width="20px" src="<?php echo plugins_url('assets/settings-gears_60473.svg', __FILE__); ?>" alt="Icon" /> Genaral</a>
+            <a href="#style"><img width="20px" src="<?php echo plugins_url('assets/brush_8313131.svg', __FILE__); ?>" alt="Icon" /> Style </a>
+            <a href="#progressbar"><img width="20px" src="<?php echo plugins_url('assets/load-bar_40471.svg', __FILE__); ?>" alt="Icon" /> Progressbar </a>
+        </header>
+        <section class="tacpro-div-section">
+        <form method="post" action="options.php">
+            <?php
+            settings_fields('tocpro-settings');
+            do_settings_sections('tocpro-settings');
+            ?>
+            <table class="form-table">
+                <tr valign="top">
+                    <th scope="row">Enable Table of Contents</th>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" name="enable_table_of_contents" value="1" <?php checked(get_option('enable_table_of_contents'), '1'); ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Enable Progress bar</th>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" name="enable_progress_bar" value="1" <?php checked(get_option('enable_progress_bar'), '1'); ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Table Text Color</th>
+                    <td>
+                        <input type="text" class="tocpro-color-picker" name="tocpro_text_color" value="<?php echo esc_attr(get_option('tocpro_text_color')); ?>">
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Table Background Color</th>
+                    <td>
+                        <input type="text" class="tocpro-color-picker" name="tocpro_background_color" value="<?php echo esc_attr(get_option('tocpro_background_color')); ?>">
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Progress Bar Color</th>
+                    <td>
+                        <input type="text" class="tocpro-color-picker" name="progress_bar_color" value="<?php echo esc_attr(get_option('progress_bar_color')); ?>">
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">TOC List Type</th>
+                    <td>
+                        <select name="tocpro_ol_type">
+                            <option value="1" <?php selected(get_option('tocpro_ol_type'), '1'); ?>>Decimal</option>
+                            <option value="a" <?php selected(get_option('tocpro_ol_type'), 'a'); ?>>Lower Alpha</option>
+                            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'I'); ?>>Upper Roman</option>
+                            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'i'); ?>>Lower Roman</option>
+                            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'A'); ?>>Upper Alpha</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            <?php submit_button(); ?>
+        </form>
+        </section>
+    </div>
+
         <form method="post" action="options.php">
             <?php
             settings_fields('tocpro-settings');
@@ -128,57 +204,7 @@ function plugin_settings_page() {
         </div>
     </div>
     <style>
-        .tocpro-main {
-  border: 2px solid rgb(114, 66, 234);
-  height: 100%;
-  padding: 20px;
-  margin-top: 20px;
-  border-radius: 14px;
-}
-                .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
-        .switch input {
-            display: none;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-            border-radius: 10px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px; 
-            width: 16px; 
-            left: 2px; 
-            bottom: 2px; 
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-            border-radius: 50%; 
-        }
-        input:checked + .slider {
-            background-color: #2196F3;
-        }
-        input:focus + .slider {
-            box-shadow: 0 0 1px #2196F3;
-        }
-        input:checked + .slider:before {
-            -webkit-transform: translateX(20px); 
-            -ms-transform: translateX(20px); 
-            transform: translateX(20px); 
-        }
+
         </style>
     <?php
 }
@@ -230,14 +256,19 @@ function register_plugin_settings() {
 }
 add_action('admin_menu', 'add_plugin_menu');
 add_action('admin_init', 'register_plugin_settings');
-add_filter('the_content', 'generate_table_of_contents');
+add_filter('the_content', 'generate_table_of_contents'); // Add table of contents
+add_filter('the_content', 'generate_individual_progress_bar'); // Add individual progress bar
 
 function register_toc_styles() {
-    wp_enqueue_style('toc-styles', plugin_dir_url(__FILE__) . 'toc-style.css');
+    wp_enqueue_style('toc-admin-styles', plugin_dir_url(__FILE__) . 'toc-admin-style.css');
+
+    wp_enqueue_script('toc-script', plugin_dir_url(__FILE__) . 'toc-script.js', array('jquery'), '1.0', true);
 }
-add_action('wp_enqueue_scripts', 'register_toc_styles');
+add_action('admin_enqueue_scripts', 'register_toc_styles');
 
 function register_toc_script() {
+    wp_enqueue_style('toc-styles', plugin_dir_url(__FILE__) . 'toc-style.css');
+
     wp_enqueue_script('toc-script', plugin_dir_url(__FILE__) . 'toc-script.js', array('jquery'), '1.0', true);
 }
 add_action('wp_enqueue_scripts', 'register_toc_script');
@@ -245,3 +276,4 @@ add_action('wp_enqueue_scripts', 'register_toc_script');
 function toc_shortcode() {
 }
 add_shortcode('table_of_contents', 'toc_shortcode');
+
