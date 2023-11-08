@@ -14,47 +14,46 @@ function generate_table_of_contents($content) {
 
         if (!empty($matches[0])) {
             $toc = '<div class="toc">';
-
-            // Add the progress bar HTML
-            if (get_option('enable_progress_bar') == '1') {
-                $toc .= '<div class="toc-progress-bar"></div>';
-            }
-
             $toc .= '<h2>Table of Contents</h2>';
-            $toc .='<ol>';
+            $toc .= '<ol>';
             $stack = array();
 
             foreach ($matches[1] as $index => $level) {
                 $id = 'toc-' . sanitize_title_with_dashes(strip_tags($matches[0][$index]));
                 $headingText = strip_tags($matches[0][$index]);
                 $words = explode(' ', $headingText);
-                $shortenedText = implode(' ', array_slice($words, 0, 5)); 
-                $hasMoreContent = count($words) > 5; 
-                if ($level == 2) {
-                    // Main heading
-                    $toc .= '<li><a href="#' . $id . '">' . $shortenedText;
-                    if ($hasMoreContent) {
-                        $toc .= '...'; 
-                    }
-                    $toc .= '</a></li>';
-                } else {
+                $shortenedText = implode(' ', array_slice($words, 0, 5));
+                $hasMoreContent = count($words) > 5;
 
-                    $toc .= '<ol><li><a href="#' . $id . '">' . $shortenedText;
-                    if ($hasMoreContent) {
-                        $toc .= '...'; 
-                    }
-                    $toc .= '</a></li></ol>';
+                while ($level > end($stack)) {
+                    $toc .= '<ol>';
+                    array_push($stack, $level);
                 }
 
-                array_push($stack, $level);
+                while ($level < end($stack)) {
+                    $toc .= '</ol>';
+                    array_pop($stack);
+                }
+
+                $toc .= '<li><a href="#' . $id . '">' . $shortenedText;
+                if ($hasMoreContent) {
+                    $toc .= '...';
+                }
+                $toc .= '</a></li>';
 
                 $content = str_replace($matches[0][$index], '<h' . $level . ' id="' . $id . '">' . strip_tags($matches[0][$index]) . '</h' . $level . '>', $content);
+            }
+
+            while (!empty($stack)) {
+                $toc .= '</ol>';
+                array_pop($stack);
             }
 
             $toc .= '</ol></div>';
             $content = $toc . $content;
         }
     }
+
     return $content;
 }
 
