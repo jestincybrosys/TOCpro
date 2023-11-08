@@ -18,7 +18,7 @@ function generate_table_of_contents($content) {
                 $toc .= '<div class="tocpro-progress-bar"></div>';
             }
             $toc .= '<h2>Table of Contents</h2>';
-            $toc .= '<ol>';
+            $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; // Set OL type
             $stack = array();
 
             foreach ($matches[1] as $index => $level) {
@@ -29,7 +29,7 @@ function generate_table_of_contents($content) {
                 $hasMoreContent = count($words) > 5;
 
                 while ($level > end($stack)) {
-                    $toc .= '<ol>';
+                    $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; // Set OL type
                     array_push($stack, $level);
                 }
 
@@ -114,6 +114,20 @@ function plugin_settings_page() {
                         <input type="text" class="tocpro-color-picker" name="progress_bar_color" value="<?php echo esc_attr(get_option('progress_bar_color')); ?>">
                     </td>
                 </tr>
+                <tr valign="top">
+    <th scope="row">TOC OL Type</th>
+    <td>
+        <select name="tocpro_ol_type">
+            <option value="1" <?php selected(get_option('tocpro_ol_type'), '1'); ?>>Decimal</option>
+            <option value="a" <?php selected(get_option('tocpro_ol_type'), 'a'); ?>>Lower Alpha</option>
+            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'I'); ?>>Upper Roman</option>
+            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'i'); ?>>Lower Roman</option>
+            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'A'); ?>>Upper Alpha</option>
+            <!-- Add more OL type options as needed -->
+        </select>
+    </td>
+</tr>
+
                 <!-- Add more style settings as needed -->
             </table>
             <?php submit_button(); ?>
@@ -224,6 +238,8 @@ function register_plugin_settings() {
     register_setting('tocpro-settings', 'tocpro_text_color');
     register_setting('tocpro-settings', 'tocpro_background_color');
     register_setting('tocpro-settings', 'progress_bar_color');
+    register_setting('tocpro-settings', 'tocpro_ol_type'); // Add this line for OL type
+    
 }
 add_action('admin_menu', 'add_plugin_menu');
 add_action('admin_init', 'register_plugin_settings');
