@@ -6,7 +6,6 @@ Version: 1.0.0
 Author: Jestin Joseph
 */
 
-// Function to generate table of contents
 function generate_table_of_contents($content) {
     if (get_option('enable_table_of_contents') == '1' && (is_single() || is_page())) {
         $pattern = '/<h([2-6])[^>]*>.*?<\/h\1>/i';
@@ -18,7 +17,7 @@ function generate_table_of_contents($content) {
                 $toc .= '<div class="tocpro-progress-bar"></div>';
             }
             $toc .= '<h2>Table of Contents</h2>';
-            $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; // Set OL type
+            $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; 
             $stack = array();
 
             foreach ($matches[1] as $index => $level) {
@@ -29,7 +28,7 @@ function generate_table_of_contents($content) {
                 $hasMoreContent = count($words) > 5;
 
                 while ($level > end($stack)) {
-                    $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; // Set OL type
+                    $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">';
                     array_push($stack, $level);
                 }
 
@@ -60,12 +59,10 @@ function generate_table_of_contents($content) {
     return $content;
 }
 
-// Add a menu to enable or disable the table of contents
 function add_plugin_menu() {
     add_menu_page('TocPro Settings', 'TOCPro', 'manage_options', 'tocpro-settings', 'plugin_settings_page', '', 30);
 }
 
-// Modify the settings page to include color picker fields
 function plugin_settings_page() {
     ?>
     <div class="wrap">
@@ -95,15 +92,14 @@ function plugin_settings_page() {
                         </label>
                     </td>
                 </tr>
-                <!-- Add settings for TOC styles using color picker -->
                 <tr valign="top">
-                    <th scope="row">TOC Text Color</th>
+                    <th scope="row">Table Text Color</th>
                     <td>
                         <input type="text" class="tocpro-color-picker" name="tocpro_text_color" value="<?php echo esc_attr(get_option('tocpro_text_color')); ?>">
                     </td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row">tocpro Background Color</th>
+                    <th scope="row">Table Background Color</th>
                     <td>
                         <input type="text" class="tocpro-color-picker" name="tocpro_background_color" value="<?php echo esc_attr(get_option('tocpro_background_color')); ?>">
                     </td>
@@ -115,20 +111,17 @@ function plugin_settings_page() {
                     </td>
                 </tr>
                 <tr valign="top">
-    <th scope="row">TOC OL Type</th>
-    <td>
-        <select name="tocpro_ol_type">
-            <option value="1" <?php selected(get_option('tocpro_ol_type'), '1'); ?>>Decimal</option>
-            <option value="a" <?php selected(get_option('tocpro_ol_type'), 'a'); ?>>Lower Alpha</option>
-            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'I'); ?>>Upper Roman</option>
-            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'i'); ?>>Lower Roman</option>
-            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'A'); ?>>Upper Alpha</option>
-            <!-- Add more OL type options as needed -->
-        </select>
-    </td>
-</tr>
-
-                <!-- Add more style settings as needed -->
+                    <th scope="row">TOC List Type</th>
+                    <td>
+                        <select name="tocpro_ol_type">
+                            <option value="1" <?php selected(get_option('tocpro_ol_type'), '1'); ?>>Decimal</option>
+                            <option value="a" <?php selected(get_option('tocpro_ol_type'), 'a'); ?>>Lower Alpha</option>
+                            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'I'); ?>>Upper Roman</option>
+                            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'i'); ?>>Lower Roman</option>
+                            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'A'); ?>>Upper Alpha</option>
+                        </select>
+                    </td>
+                </tr>
             </table>
             <?php submit_button(); ?>
         </form>
@@ -145,8 +138,8 @@ function plugin_settings_page() {
                 .switch {
             position: relative;
             display: inline-block;
-            width: 40px; /* Reduced width */
-            height: 20px; /* Reduced height */
+            width: 40px;
+            height: 20px;
         }
         .switch input {
             display: none;
@@ -161,19 +154,19 @@ function plugin_settings_page() {
             background-color: #ccc;
             -webkit-transition: .4s;
             transition: .4s;
-            border-radius: 10px; /* Round slider */
+            border-radius: 10px;
         }
         .slider:before {
             position: absolute;
             content: "";
-            height: 16px; /* Reduced height */
-            width: 16px; /* Reduced width */
-            left: 2px; /* Adjusted position */
-            bottom: 2px; /* Adjusted position */
+            height: 16px; 
+            width: 16px; 
+            left: 2px; 
+            bottom: 2px; 
             background-color: white;
             -webkit-transition: .4s;
             transition: .4s;
-            border-radius: 50%; /* Round knob */
+            border-radius: 50%; 
         }
         input:checked + .slider {
             background-color: #2196F3;
@@ -182,22 +175,20 @@ function plugin_settings_page() {
             box-shadow: 0 0 1px #2196F3;
         }
         input:checked + .slider:before {
-            -webkit-transform: translateX(20px); /* Adjusted position */
-            -ms-transform: translateX(20px); /* Adjusted position */
-            transform: translateX(20px); /* Adjusted position */
+            -webkit-transform: translateX(20px); 
+            -ms-transform: translateX(20px); 
+            transform: translateX(20px); 
         }
         </style>
     <?php
 }
 
-// Enqueue WordPress Color Picker scripts and styles
 function load_color_picker() {
     wp_enqueue_script('wp-color-picker');
     wp_enqueue_style('wp-color-picker');
 }
 add_action('admin_enqueue_scripts', 'load_color_picker');
 
-// Initialize the Color Picker for the input fields
 function init_color_picker() {
     ?>
     <script>
@@ -209,7 +200,6 @@ function init_color_picker() {
 }
 add_action('admin_footer', 'init_color_picker');
 
-// Include styles for the tocpro and progress bar based on user settings
 function include_tocpro_styles() {
     ?>
     <style>
@@ -217,7 +207,6 @@ function include_tocpro_styles() {
             color: <?php echo esc_attr(get_option('tocpro_text_color')); ?>;
             background-color: <?php echo esc_attr(get_option('tocpro_background_color')); ?>;
             font-size: <?php echo esc_attr(get_option('tocpro_font_size')); ?>px;
-            /* Add more styles as needed */
         }
         .tocpro a{
             color: <?php echo esc_attr(get_option('tocpro_text_color')); ?>;
@@ -231,15 +220,13 @@ function include_tocpro_styles() {
 }
 add_action('wp_head', 'include_tocpro_styles');
 
-// Register the setting and options, including color picker fields
 function register_plugin_settings() {
     register_setting('tocpro-settings', 'enable_table_of_contents');
     register_setting('tocpro-settings', 'enable_progress_bar');
     register_setting('tocpro-settings', 'tocpro_text_color');
     register_setting('tocpro-settings', 'tocpro_background_color');
     register_setting('tocpro-settings', 'progress_bar_color');
-    register_setting('tocpro-settings', 'tocpro_ol_type'); // Add this line for OL type
-    
+    register_setting('tocpro-settings', 'tocpro_ol_type'); 
 }
 add_action('admin_menu', 'add_plugin_menu');
 add_action('admin_init', 'register_plugin_settings');
