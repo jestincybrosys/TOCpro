@@ -13,7 +13,10 @@ function generate_table_of_contents($content) {
         preg_match_all($pattern, $content, $matches);
 
         if (!empty($matches[0])) {
-            $toc = '<div class="toc">';
+            $toc = '<div class="tocpro">';
+            if (get_option('enable_progress_bar') == '1') {
+                $toc .= '<div class="tocpro-progress-bar"></div>';
+            }
             $toc .= '<h2>Table of Contents</h2>';
             $toc .= '<ol>';
             $stack = array();
@@ -66,7 +69,8 @@ function add_plugin_menu() {
 function plugin_settings_page() {
     ?>
     <div class="wrap">
-        <h2>TocPro Settings</h2>
+        <div class="wrap tocpro-main">
+        <h2>TOCPro Settings</h2>
         <form method="post" action="options.php">
             <?php
             settings_fields('tocpro-settings');
@@ -95,65 +99,36 @@ function plugin_settings_page() {
                 <tr valign="top">
                     <th scope="row">TOC Text Color</th>
                     <td>
-                        <input type="text" class="toc-color-picker" name="toc_text_color" value="<?php echo esc_attr(get_option('toc_text_color')); ?>">
+                        <input type="text" class="tocpro-color-picker" name="tocpro_text_color" value="<?php echo esc_attr(get_option('tocpro_text_color')); ?>">
                     </td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row">TOC Background Color</th>
+                    <th scope="row">tocpro Background Color</th>
                     <td>
-                        <input type="text" class="toc-color-picker" name="toc_background_color" value="<?php echo esc_attr(get_option('toc_background_color')); ?>">
+                        <input type="text" class="tocpro-color-picker" name="tocpro_background_color" value="<?php echo esc_attr(get_option('tocpro_background_color')); ?>">
                     </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row">Progress Bar Color</th>
                     <td>
-                        <input type="text" class="toc-color-picker" name="progress_bar_color" value="<?php echo esc_attr(get_option('progress_bar_color')); ?>">
+                        <input type="text" class="tocpro-color-picker" name="progress_bar_color" value="<?php echo esc_attr(get_option('progress_bar_color')); ?>">
                     </td>
                 </tr>
                 <!-- Add more style settings as needed -->
             </table>
             <?php submit_button(); ?>
         </form>
+        </div>
     </div>
-    <?php
-}
-
-// Enqueue WordPress Color Picker scripts and styles
-function load_color_picker() {
-    wp_enqueue_script('wp-color-picker');
-    wp_enqueue_style('wp-color-picker');
-}
-add_action('admin_enqueue_scripts', 'load_color_picker');
-
-// Initialize the Color Picker for the input fields
-function init_color_picker() {
-    ?>
-    <script>
-        jQuery(document).ready(function($) {
-            $('.toc-color-picker').wpColorPicker();
-        });
-    </script>
-    <?php
-}
-add_action('admin_footer', 'init_color_picker');
-
-// Include styles for the TOC and progress bar based on user settings
-function include_toc_styles() {
-    ?>
     <style>
-        .toc {
-            color: <?php echo esc_attr(get_option('toc_text_color')); ?>;
-            background-color: <?php echo esc_attr(get_option('toc_background_color')); ?>;
-            font-size: <?php echo esc_attr(get_option('toc_font_size')); ?>px;
-            /* Add more styles as needed */
-        }
-        .toc a{
-            color: <?php echo esc_attr(get_option('toc_text_color')); ?>;
-        }
-        .toc-progress-bar {
-            background-color: <?php echo esc_attr(get_option('progress_bar_color')); ?>;
-        }
-        .switch {
+        .tocpro-main {
+  border: 2px solid rgb(114, 66, 234);
+  height: 100%;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 14px;
+}
+                .switch {
             position: relative;
             display: inline-block;
             width: 40px; /* Reduced width */
@@ -197,17 +172,57 @@ function include_toc_styles() {
             -ms-transform: translateX(20px); /* Adjusted position */
             transform: translateX(20px); /* Adjusted position */
         }
+        </style>
+    <?php
+}
+
+// Enqueue WordPress Color Picker scripts and styles
+function load_color_picker() {
+    wp_enqueue_script('wp-color-picker');
+    wp_enqueue_style('wp-color-picker');
+}
+add_action('admin_enqueue_scripts', 'load_color_picker');
+
+// Initialize the Color Picker for the input fields
+function init_color_picker() {
+    ?>
+    <script>
+        jQuery(document).ready(function($) {
+            $('.tocpro-color-picker').wpColorPicker();
+        });
+    </script>
+    <?php
+}
+add_action('admin_footer', 'init_color_picker');
+
+// Include styles for the tocpro and progress bar based on user settings
+function include_tocpro_styles() {
+    ?>
+    <style>
+        .tocpro {
+            color: <?php echo esc_attr(get_option('tocpro_text_color')); ?>;
+            background-color: <?php echo esc_attr(get_option('tocpro_background_color')); ?>;
+            font-size: <?php echo esc_attr(get_option('tocpro_font_size')); ?>px;
+            /* Add more styles as needed */
+        }
+        .tocpro a{
+            color: <?php echo esc_attr(get_option('tocpro_text_color')); ?>;
+        }
+        .tocpro-progress-bar {
+            background-color: <?php echo esc_attr(get_option('progress_bar_color')); ?>;
+        }
+
     </style>
     <?php
 }
-add_action('wp_head', 'include_toc_styles');
+add_action('wp_head', 'include_tocpro_styles');
 
 // Register the setting and options, including color picker fields
 function register_plugin_settings() {
     register_setting('tocpro-settings', 'enable_table_of_contents');
     register_setting('tocpro-settings', 'enable_progress_bar');
-    register_setting('tocpro-settings', 'toc_text_color');
-    register_setting('tocpro-settings', 'toc_background_color');
+    register_setting('tocpro-settings', 'tocpro_text_color');
+    register_setting('tocpro-settings', 'tocpro_background_color');
     register_setting('tocpro-settings', 'progress_bar_color');
 }
 add_action('admin_menu', 'add_plugin_menu');

@@ -1,31 +1,31 @@
 /* Style the table of contents container */
-.toc {
+.tocpro {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 20px;
   background-color: #f9f9f9;
 }
-.toc {
+.tocpro {
   border-radius: 15px;
 }
-/* Style the list items in the TOC */
-.toc ul {
+/* Style the list items in the TOCpro */
+.tocpro ul {
   list-style-type: none;
   padding: 0;
 }
 
-.toc li {
+.tocpro li {
   margin: 5px 0;
 }
 
-/* Style the links in the TOC */
-.toc a {
+/* Style the links in the TOCpro */
+.tocpro a {
   text-decoration: none !important;
   color: #0073e6;
 }
 
 /* Progress bar style */
-.toc-progress-bar {
+.tocpro-progress-bar {
   height: 4px; /* Adjust the height as needed */
   background: #e64d00; /* Progress bar color */
   width: 0; /* Initial width is 0 */
