@@ -156,7 +156,9 @@ function plugin_settings_page() {
                 <tr valign="top">
                     <th scope="row">Gap from Top (in pixels)</th>
                     <td>
-                        <input type="number" name="gap_from_top" value="<?php echo esc_attr(get_option('gap_from_top', 20)); ?>">
+                    <div class="input-with-px">
+                        <input type="text" name="gap_from_top" value="<?php echo esc_attr(get_option('gap_from_top', 20)); ?>">
+                        </div>
                     </td>
                 </tr>
 
