@@ -79,10 +79,10 @@ function plugin_settings_page() {
         <div class="tocpro-head"><h2>TOCPro Settings</h2><p>Globel Settings</p></div>
     <div class="position-div">
         <header class="tacpro-div-head">
-            <a class="active tacpro-link" href="#genaral"><img width="20px" src="<?php echo plugins_url('assets/settings-gears_60473.svg', __FILE__); ?>" alt="Icon" /> Genaral</a>
-            <a class="tacpro-link" href="#style"><img width="20px" src="<?php echo plugins_url('assets/brush_8313131.svg', __FILE__); ?>" alt="Icon" /> Style </a>
-            <a class="tacpro-link" href="#progressbar"><img width="20px" src="<?php echo plugins_url('assets/load-bar_40471.svg', __FILE__); ?>" alt="Icon" /> Progressbar </a>
-            <a class="tacpro-link" href="#progressbar"><img width="20px" src="<?php echo plugins_url('assets/browser_493223.svg', __FILE__); ?>" alt="Icon" /> Auto Insert </a>
+            <a class="tacpro-link" href="#genaral"><img width="20px" src="<?php echo plugins_url('assets/settings-gears_60473.svg', __FILE__); ?>" alt="Icon" /> <span class="tocpro-hide-mob"> Genaral</span></a>
+            <a class="active tacpro-link" href="#style"><img width="20px" src="<?php echo plugins_url('assets/brush_8313131.svg', __FILE__); ?>" alt="Icon" /><span class="tocpro-hide-mob"> Style</span>  </a>
+            <a class="tacpro-link" href="#progressbar"><img width="20px" src="<?php echo plugins_url('assets/load-bar_40471.svg', __FILE__); ?>" alt="Icon" /><span class="tocpro-hide-mob"> Progressbar</span> </a>
+            <a class="tacpro-link" href="#progressbar"><img width="20px" src="<?php echo plugins_url('assets/browser_493223.svg', __FILE__); ?>" alt="Icon" /><span class="tocpro-hide-mob"> Auto Insert</span></a>
         </header>
         <section class="tacpro-div-section">
         <form method="post" action="options.php">
@@ -127,6 +127,39 @@ function plugin_settings_page() {
                         <input type="text" class="tocpro-color-picker" name="progress_bar_color" value="<?php echo esc_attr(get_option('progress_bar_color')); ?>">
                     </td>
                 </tr>
+                <tr valign="top">
+                    <th scope="row">Width</th>
+                    <td>
+                        <select name="tocpro_width">
+                            <option value="auto" <?php selected(get_option('tocpro_width'), 'Auto'); ?>>Auto</option>
+                            <option value="100%" <?php selected(get_option('tocpro_width'), '100%'); ?>>100%</option>
+                            
+                        </select>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Min Widtgh</th>
+                    <td>
+                        <div class="input-with-px">
+                            <input type="text" class="min_width_field"  name="tocpro_min_width" value="<?php echo esc_attr(get_option('tocpro_min_width')); ?>">
+                        </div>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Max width</th>
+                    <td>
+                    <div class="input-with-px">
+                        <input type="text" class="" name="tocpro_max_width" value="<?php echo esc_attr(get_option('tocpro_max_width')); ?>">
+                </div>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Gap from Top (in pixels)</th>
+                    <td>
+                        <input type="number" name="gap_from_top" value="<?php echo esc_attr(get_option('gap_from_top', 20)); ?>">
+                    </td>
+                </tr>
+
                 <tr valign="top">
                     <th scope="row">TOC List Type</th>
                     <td>
@@ -187,28 +220,8 @@ function plugin_settings_page() {
                         <input type="text" class="tocpro-color-picker" name="progress_bar_color" value="<?php echo esc_attr(get_option('progress_bar_color')); ?>">
                     </td>
                 </tr>
-                <tr valign="top">
-                    <th scope="row">Width</th>
-                    <td>
-                        <select name="tocpro_width">
-                            <option value="auto" <?php selected(get_option('tocpro_width'), 'Auto'); ?>>Auto</option>
-                            <option value="100%" <?php selected(get_option('tocpro_width'), '100%'); ?>>100%</option>
-                            
-                        </select>
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row">Min Widtgh</th>
-                    <td>
-                        <input type="text" class="" name="tocpro_min_width" value="<?php echo esc_attr(get_option('tocpro_min_width')); ?>">
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row">Max width</th>
-                    <td>
-                        <input type="text" class="" name="tocpro_max_width" value="<?php echo esc_attr(get_option('tocpro_max_width')); ?>">
-                    </td>
-                </tr>
+
+
                 <tr valign="top">
                     <th scope="row">TOC List Type</th>
                     <td>
@@ -291,6 +304,11 @@ $counter_style = isset($counter_styles[$selected_type]) ? $counter_styles[$selec
             content: counters(item, '.' , <?php echo $counter_style; ?>) ' ';
         }
     </style>
+
+    <script>
+            var offset = parseInt(<?php echo get_option('gap_from_top', 20); ?>);
+
+    </script>
     <?php
 }
 add_action('wp_head', 'include_tocpro_styles');
@@ -304,7 +322,7 @@ function register_plugin_settings() {
     register_setting('tocpro-settings', 'tocpro_width');
     register_setting('tocpro-settings', 'tocpro_min_width');
     register_setting('tocpro-settings', 'tocpro_max_width');
-
+    register_setting('tocpro-settings', 'gap_from_top');
     register_setting('tocpro-settings', 'tocpro_ol_type'); 
 }
 add_action('admin_menu', 'add_plugin_menu');

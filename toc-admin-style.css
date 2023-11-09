@@ -69,27 +69,21 @@ input:checked + .slider:before {
   justify-content: center;
   align-items: center;
   font-weight: 600;
-  border-right: 2px solid #ffffffcd;
-  border-left: 2px solid #ffffffcd;
-
 }
-.tacpro-link.active{
+.tacpro-link.active {
   border-top: 4px solid #e96367;
   background-color: #ffffff;
   box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 12px;
   border-radius: 10px 10px 0 0;
   color: #e96367;
-
 }
-.tacpro-link.active img{
+.tacpro-link.active img {
   opacity: 0.8; /* Set the opacity to 0.5 (50% transparent) */
-
 }
-.tacpro-link:hover img{
+.tacpro-link:hover img {
   opacity: 0.8; /* Set the opacity to 0.5 (50% transparent) */
-
 }
-.tacpro-div-head .tacpro-link:hover{
+.tacpro-div-head .tacpro-link:hover {
   color: #e96367;
   border-top: 4px solid #e96367;
   background-color: #ffffff;
@@ -101,7 +95,6 @@ input:checked + .slider:before {
 .tacpro-div-head a img {
   margin-right: 10px;
   opacity: 0.4; /* Set the opacity to 0.5 (50% transparent) */
-
 }
 .tocpro-head {
   width: 100%;
@@ -138,4 +131,21 @@ input:checked + .slider:before {
   height: 100%;
   margin-top: 50px;
   padding: 20px;
+}
+.input-with-px {
+  position: relative;
+  width: max-content;
+}
+
+.input-with-px::after {
+  content: "px";
+  position: absolute;
+  right: 10px; /* Adjust the spacing as needed */
+  top: 47%;
+  transform: translateY(-50%);
+}
+@media (max-width: 768px) {
+  .tocpro-hide-mob {
+    display: none;
+  }
 }
