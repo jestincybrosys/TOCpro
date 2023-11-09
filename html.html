@@ -1,0 +1,54 @@
+<ol type="1">
+  <li><a href="#toc-heading-2">heading 2</a></li>
+  <li><a href="#toc-heading-2">heading 2</a></li>
+  <ol type="1">
+    <li><a href="#toc-heading-3">heading 3</a></li>
+    <ol type="1">
+      <li><a href="#toc-heading-4">heading 4</a></li>
+    </ol>
+  </ol>
+  <li><a href="#toc-heading-2">heading 2</a></li>
+  <ol type="1">
+    <li><a href="#toc-heading-4">heading 4</a></li>
+  </ol>
+  <li><a href="#toc-heading-2">heading 2</a></li>
+  <li><a href="#toc-heading-2">heading 2</a></li>
+  <ol type="1">
+    <li><a href="#toc-heading-4">heading 4</a></li>
+    <li><a href="#toc-heading-4">heading 4</a></li>
+  </ol>
+  <li><a href="#toc-heading-3">heading 3</a></li>
+</ol>
+<ol>
+<li>Item 1</li>
+<>Item 2
+   <ol>
+        <li>Subitem 1</li>
+        <li>Subitem 2</li>
+   </ol>
+
+<li>Item 2
+    <ol>
+         <li>Subitem 1</li>
+         <li>Subitem 2</li>
+    </ol>
+ </li>
+</ol>
+<style>
+    ol {
+  counter-reset: item;
+}
+
+ol > li {
+  counter-increment: item;
+}
+
+ol ol > li {
+  display: block;
+}
+
+ol ol > li:before {
+  content: counters(item, ".") ". ";
+  margin-left: -20px;
+}
+</style>

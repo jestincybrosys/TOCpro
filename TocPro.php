@@ -12,10 +12,10 @@ function generate_table_of_contents($content) {
         preg_match_all($pattern, $content, $matches);
 
         if (!empty($matches[0])) {
-            $toc = '<div class="tocpro">';
+            $toc = '<div class="tocpro tocpro-set-width">';
     
-            $toc .= '<h2>Table of Contents</h2>';
-            $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; 
+            $toc .= '<p>Table of Contents</p>';
+            // $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; 
             $stack = array();
 
             foreach ($matches[1] as $index => $level) {
@@ -26,12 +26,12 @@ function generate_table_of_contents($content) {
                 $hasMoreContent = count($words) > 5;
 
                 while ($level > end($stack)) {
-                    $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">';
+                    $toc .= '<ol class="custom-ol" type="' . esc_attr(get_option('tocpro_ol_type')) . '">';
                     array_push($stack, $level);
                 }
 
                 while ($level < end($stack)) {
-                    $toc .= '</ol>';
+                    $toc .= '</ol></li>';
                     array_pop($stack);
                 }
 
@@ -39,7 +39,7 @@ function generate_table_of_contents($content) {
                 if ($hasMoreContent) {
                     $toc .= '...';
                 }
-                $toc .= '</a></li>';
+                $toc .= '</a>';
 
                 $content = str_replace($matches[0][$index], '<h' . $level . ' id="' . $id . '">' . strip_tags($matches[0][$index]) . '</h' . $level . '>', $content);
             }
@@ -49,7 +49,7 @@ function generate_table_of_contents($content) {
                 array_pop($stack);
             }
 
-            $toc .= '</ol></div>';
+            $toc .= '</div>';
             $content = $toc . $content;
         }
     }
@@ -76,12 +76,13 @@ function plugin_settings_page() {
     ?>
     <div class="wrap">
         <div class="wrap tocpro-main">
-        <div class="tocpro-head"><h2>TOCPro Settings</h2></div>
+        <div class="tocpro-head"><h2>TOCPro Settings</h2><p>Globel Settings</p></div>
     <div class="position-div">
         <header class="tacpro-div-head">
-            <a href="#genaral"><img width="20px" src="<?php echo plugins_url('assets/settings-gears_60473.svg', __FILE__); ?>" alt="Icon" /> Genaral</a>
-            <a href="#style"><img width="20px" src="<?php echo plugins_url('assets/brush_8313131.svg', __FILE__); ?>" alt="Icon" /> Style </a>
-            <a href="#progressbar"><img width="20px" src="<?php echo plugins_url('assets/load-bar_40471.svg', __FILE__); ?>" alt="Icon" /> Progressbar </a>
+            <a class="active tacpro-link" href="#genaral"><img width="20px" src="<?php echo plugins_url('assets/settings-gears_60473.svg', __FILE__); ?>" alt="Icon" /> Genaral</a>
+            <a class="tacpro-link" href="#style"><img width="20px" src="<?php echo plugins_url('assets/brush_8313131.svg', __FILE__); ?>" alt="Icon" /> Style </a>
+            <a class="tacpro-link" href="#progressbar"><img width="20px" src="<?php echo plugins_url('assets/load-bar_40471.svg', __FILE__); ?>" alt="Icon" /> Progressbar </a>
+            <a class="tacpro-link" href="#progressbar"><img width="20px" src="<?php echo plugins_url('assets/browser_493223.svg', __FILE__); ?>" alt="Icon" /> Auto Insert </a>
         </header>
         <section class="tacpro-div-section">
         <form method="post" action="options.php">
@@ -187,6 +188,28 @@ function plugin_settings_page() {
                     </td>
                 </tr>
                 <tr valign="top">
+                    <th scope="row">Width</th>
+                    <td>
+                        <select name="tocpro_width">
+                            <option value="auto" <?php selected(get_option('tocpro_width'), 'Auto'); ?>>Auto</option>
+                            <option value="100%" <?php selected(get_option('tocpro_width'), '100%'); ?>>100%</option>
+                            
+                        </select>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Min Widtgh</th>
+                    <td>
+                        <input type="text" class="" name="tocpro_min_width" value="<?php echo esc_attr(get_option('tocpro_min_width')); ?>">
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Max width</th>
+                    <td>
+                        <input type="text" class="" name="tocpro_max_width" value="<?php echo esc_attr(get_option('tocpro_max_width')); ?>">
+                    </td>
+                </tr>
+                <tr valign="top">
                     <th scope="row">TOC List Type</th>
                     <td>
                         <select name="tocpro_ol_type">
@@ -228,6 +251,12 @@ add_action('admin_footer', 'init_color_picker');
 
 function include_tocpro_styles() {
     ?>
+    <?php
+$minWidth = get_option('tocpro_min_width');
+if (empty($minWidth)) {
+    $minWidth = 'unset';
+}
+?>
     <style>
         .tocpro {
             color: <?php echo esc_attr(get_option('tocpro_text_color')); ?>;
@@ -240,7 +269,11 @@ function include_tocpro_styles() {
         .tocpro-progress-bar {
             background-color: <?php echo esc_attr(get_option('progress_bar_color')); ?>;
         }
-
+        .tocpro-set-width{
+            width:<?php echo esc_attr(get_option('tocpro_width')); ?>;
+            min-width: <?php echo esc_attr($minWidth); ?>px !important;
+            max-width: <?php echo esc_attr(get_option('tocpro_max_width')); ?>px !important;
+        }
     </style>
     <?php
 }
@@ -252,6 +285,10 @@ function register_plugin_settings() {
     register_setting('tocpro-settings', 'tocpro_text_color');
     register_setting('tocpro-settings', 'tocpro_background_color');
     register_setting('tocpro-settings', 'progress_bar_color');
+    register_setting('tocpro-settings', 'tocpro_width');
+    register_setting('tocpro-settings', 'tocpro_min_width');
+    register_setting('tocpro-settings', 'tocpro_max_width');
+
     register_setting('tocpro-settings', 'tocpro_ol_type'); 
 }
 add_action('admin_menu', 'add_plugin_menu');

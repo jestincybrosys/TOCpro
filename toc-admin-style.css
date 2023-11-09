@@ -60,33 +60,67 @@ input:checked + .slider:before {
   top: -50px;
   position: absolute;
 }
-.tacpro-div-head a {
+.tacpro-div-head .tacpro-link {
   height: 20px;
-  border-top: 4px solid #e96367;
-  background-color: #ffffff;
   margin-top: 10px;
   padding: 10px 15px 25px 15px;
-  border-radius: 10px 10px 0 0;
   text-decoration: none;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  box-shadow: 0px -8px 10px rgba(17, 17, 26, 0.1);
+  font-weight: 600;
+  border-right: 2px solid #ffffffcd;
+  border-left: 2px solid #ffffffcd;
+
 }
+.tacpro-link.active{
+  border-top: 4px solid #e96367;
+  background-color: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 12px;
+  border-radius: 10px 10px 0 0;
+  color: #e96367;
+
+}
+.tacpro-link.active img{
+  opacity: 0.8; /* Set the opacity to 0.5 (50% transparent) */
+
+}
+.tacpro-link:hover img{
+  opacity: 0.8; /* Set the opacity to 0.5 (50% transparent) */
+
+}
+.tacpro-div-head .tacpro-link:hover{
+  color: #e96367;
+  border-top: 4px solid #e96367;
+  background-color: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px -10px 12px;
+  border-radius: 10px 10px 0 0;
+  transition: 0.1s;
+}
+
 .tacpro-div-head a img {
-  margin-right: 5px;
+  margin-right: 10px;
+  opacity: 0.4; /* Set the opacity to 0.5 (50% transparent) */
+
 }
 .tocpro-head {
   width: 100%;
   background-color: #e96367;
   border-radius: 10px;
   padding: 1px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .tocpro-head h2 {
   padding: 0;
   margin: 10px 15px;
   font-size: 22px;
   color: #ffffff;
+}
+.tocpro-head p {
+  padding-right: 10px;
+  color: #e3f0ff;
 }
 .tocpro-main {
   border: 2px solid #c17d74;
