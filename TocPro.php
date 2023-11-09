@@ -58,7 +58,7 @@ function generate_table_of_contents($content) {
 }
 
 function generate_individual_progress_bar($content) {
-    if (get_option('enable_table_of_contents') == '1' && (is_single() || is_page())) {
+    if (get_option('enable_progress_bar') == '1' && (is_single() || is_page())) {
             $progress_bar = '<div class="tocpro-progress-bar"></div>';
             $content = $progress_bar . $content;
         
@@ -256,6 +256,19 @@ $minWidth = get_option('tocpro_min_width');
 if (empty($minWidth)) {
     $minWidth = 'unset';
 }
+$selected_type = get_option('tocpro_ol_type'); // Get the selected counter type from your settings
+
+// Define an array to map the counter styles to their CSS values
+$counter_styles = array(
+    '1' => 'decimal',
+    'a' => 'lower-alpha',
+    'I' => 'upper-roman',
+    'i' => 'lower-roman',
+    'A' => 'upper-alpha',
+);
+
+$counter_style = isset($counter_styles[$selected_type]) ? $counter_styles[$selected_type] : 'decimal';
+
 ?>
     <style>
         .tocpro {
@@ -273,6 +286,9 @@ if (empty($minWidth)) {
             width:<?php echo esc_attr(get_option('tocpro_width')); ?>;
             min-width: <?php echo esc_attr($minWidth); ?>px !important;
             max-width: <?php echo esc_attr(get_option('tocpro_max_width')); ?>px !important;
+        }      
+        .custom-ol li:before {
+            content: counters(item, '.' , <?php echo $counter_style; ?>) ' ';
         }
     </style>
     <?php
