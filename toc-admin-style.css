@@ -97,6 +97,7 @@ input:checked + .slider:before {
   opacity: 0.4; /* Set the opacity to 0.5 (50% transparent) */
 }
 .tocpro-head {
+  position: relative;
   width: 100%;
   background-color: #e96367;
   border-radius: 10px;
@@ -147,5 +148,31 @@ input:checked + .slider:before {
 @media (max-width: 768px) {
   .tocpro-hide-mob {
     display: none;
+
   }
+  .tacpro-div-head a img{
+    margin: 0;
+  }
+
+}
+.tocpro-notice p{
+  color: green;
+  border: none;
+}
+.tocpro-notice{
+  width: 150px;
+  height: 50px;
+  position: absolute !important;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0px;
+  color: #fff !important;
+  background-color: #ffffff !important;
+  border-bottom: 5px solid green !important;
+  border-left: none !important;
+}
+.notice-dismiss{
+  top: -6px;
+  right: -6px;
 }

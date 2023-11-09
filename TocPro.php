@@ -75,6 +75,11 @@ function add_plugin_menu() {
 function plugin_settings_page() {
     ?>
     <div class="wrap">
+    <?php
+if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
+    echo '<div id="message" class="updated notice is-dismissible tocpro-notice"><p><strong>Settings saved.</strong></p></div>';
+}
+?>
         <div class="wrap tocpro-main">
         <div class="tocpro-head"><h2>TOCPro Settings</h2><p>Globel Settings</p></div>
     <div class="position-div">
@@ -231,19 +236,18 @@ function plugin_settings_page() {
                             <option value="1" <?php selected(get_option('tocpro_ol_type'), '1'); ?>>Decimal</option>
                             <option value="a" <?php selected(get_option('tocpro_ol_type'), 'a'); ?>>Lower Alpha</option>
                             <option value="I" <?php selected(get_option('tocpro_ol_type'), 'I'); ?>>Upper Roman</option>
-                            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'i'); ?>>Lower Roman</option>
-                            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'A'); ?>>Upper Alpha</option>
+                            <option value="i" <?php selected(get_option('tocpro_ol_type'), 'i'); ?>>Lower Roman</option>
+                            <option value="A" <?php selected(get_option('tocpro_ol_type'), 'A'); ?>>Upper Alpha</option>
                         </select>
                     </td>
-                </tr>
+                </tr>           
             </table>
             <?php submit_button(); ?>
         </form>
         </div>
     </div>
-    <style>
 
-        </style>
+
     <?php
 }
 
