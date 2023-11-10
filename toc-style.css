@@ -1,6 +1,5 @@
 /* Style the table of contents container */
 .tocpro {
-  border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 20px;
   background-color: #f9f9f9;
@@ -50,7 +49,7 @@
   counter-increment: item;
 }
 
-.custom-ol a:before {
+.custom-ol li:before {
   display: inline-block;
   width: 1.5em;
   text-align: right;

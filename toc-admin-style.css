@@ -1,3 +1,6 @@
+body{
+  overflow: hidden;
+}
 .slider.round {
   border-radius: 34px;
 }
@@ -117,6 +120,7 @@ input:checked + .slider:before {
   color: #e3f0ff;
 }
 .tocpro-main {
+  position: relative;
   border: 2px solid #c17d74;
   height: 100%;
   padding: 20px;
@@ -154,13 +158,25 @@ input:checked + .slider:before {
     margin: 0;
   }
 
+  .custom-floating-button {
+    font-size: 16px !important;
+    font-weight: 700;
+    position: fixed;
+    width: 100px;
+    height: 40px;
+    bottom: 90px;
+    right: 50px;
+  }
 }
 .tocpro-notice p{
   color: green;
   border: none;
+  padding-left: 10px !important;
 }
 .tocpro-notice{
-  width: 150px;
+  display: flex;
+  align-items: center;
+justify-content: center;  width: 130px;
   height: 50px;
   position: absolute !important;
   left: 50%;
@@ -172,7 +188,134 @@ input:checked + .slider:before {
   border-bottom: 5px solid green !important;
   border-left: none !important;
 }
-.notice-dismiss{
-  top: -6px;
-  right: -6px;
+
+.custom-floating-button {
+  font-size: 16px !important;
+  font-weight: 700;
+  position: fixed;
+  width: 150px;
+  height: 50px;
+  bottom: 120px;
+  right: 100px;
+  background-color: #e96367 !important;
+  color: #FFF !important;
+  border-radius: 20px !important;
+  text-align: center;
+  border: none !important;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px !important;
+  transition: background-color 0.5s; /* Add a smooth transition effect for background color change */
+
+}
+
+.custom-floating-button:hover {
+  background-color: #df343a !important; /* Change the background color on hover */
+}
+
+
+
+
+.toast{
+  position: absolute;
+  left: 75%;
+  top: 10px;
+  border-radius: 6px;
+  background: #fff;
+  padding: 20px 35px 20px 25px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transform: translateX(calc(100% + 70px));
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.25, 1.35);}
+.toast.active{
+  transform: translateX(0);
+}
+.toast-content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.toast-check{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 35px;
+  width: 35px;
+  background-color: #40f467;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 20px;
+}
+.message{
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px;
+}
+.message-text{
+  font-size: 20px;
+  font-weight: 600;
+}
+.text-1{
+  color: #333;
+}
+.text-2{
+  color: #666;
+  font-weight: 400;
+  font-size: 16px;
+}
+.toast-close{
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  padding: 5px;
+  cursor: pointer;
+  opacity: 0.7;
+}
+.toast-close:hover{
+  opacity: 1;
+}
+.progress{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: #ddd;
+}
+.progress::before{
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #40f467;
+}
+.progress.active::before{
+  animation: progress 5s linear forwards;
+}
+@keyframes progress {
+  100%{
+    right: 100%;
+  }
+}
+.toast-btn{
+  font-size: 16px !important;
+  font-weight: 700;
+  position: fixed;
+  width: 150px;
+  height: 50px;
+  bottom: 120px;
+  right: 100px;
+  background-color: #e96367 !important;
+  color: #FFF !important;
+  border-radius: 20px !important;
+  text-align: center;
+  border: none !important;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px !important;
+  transition: background-color 0.5s; /* Add a smooth transition effect for background color change */
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+.toast-btn:hover {
+  background-color: #df343a !important; /* Change the background color on hover */
 }

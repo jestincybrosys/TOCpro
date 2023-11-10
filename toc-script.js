@@ -4,7 +4,6 @@ jQuery(document).ready(function ($) {
     event.preventDefault();
     var target = $(this).attr("href");
 
-
     // Scroll to the target element with an additional 20px gap from the top
     $("html, body").animate(
         {
@@ -14,7 +13,6 @@ jQuery(document).ready(function ($) {
     );
 });
 
-
   // Update the progress bar as the user scrolls
   $(window).scroll(function () {
     var scroll = $(window).scrollTop();
@@ -23,3 +21,5 @@ jQuery(document).ready(function ($) {
     $(".tocpro-progress-bar").css("width", progress + "%");
   });
 });
+
+
