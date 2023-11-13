@@ -7,7 +7,18 @@ Author: Jestin Joseph
 */
 
 function generate_table_of_contents($content) {
-    if (get_option('enable_table_of_contents') == '1' && (is_single() || is_page())) {
+    $auto_insert_pages = get_option('tocpro_auto_insert_pages', array());
+    $auto_insert_post_types = get_option('tocpro_auto_insert_post_types', array('post'));
+
+    // Check if there are no auto-insert pages or post types selected
+    if (empty($auto_insert_pages) && empty($auto_insert_post_types)) {
+        return $content; // Return the original content if nothing is selected
+    }
+
+    // Check if the current page or post type is in the list for auto-insertion
+    if ((empty($auto_insert_pages) || in_array(get_the_ID(), $auto_insert_pages)) &&
+        (empty($auto_insert_post_types) || in_array(get_post_type(), $auto_insert_post_types))) {
+
         $pattern = '/<h([2-6])[^>]*>.*?<\/h\1>/i';
         preg_match_all($pattern, $content, $matches);
 
@@ -15,9 +26,9 @@ function generate_table_of_contents($content) {
             $toc = '<div class="tocpro tocpro-set-width">';
     
             $toc .= '<p>' . esc_attr(get_option('tocpro_header_label')) . '</p>';
-            // $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; 
+            $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; 
             $stack = array();
-            $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">';
+
             foreach ($matches[1] as $index => $level) {
                 $id = 'toc-' . sanitize_title_with_dashes(strip_tags($matches[0][$index]));
                 $headingText = strip_tags($matches[0][$index]);
@@ -57,6 +68,7 @@ function generate_table_of_contents($content) {
     return $content;
 }
 
+
 function generate_individual_progress_bar($content) {
     if (get_option('enable_progress_bar') == '1' && (is_single() || is_page())) {
             $progress_bar = '<div class="tocpro-progress-bar"></div>';
@@ -66,7 +78,6 @@ function generate_individual_progress_bar($content) {
 
     return $content;
 }
-
 
 function add_plugin_menu() {
     add_menu_page('TocPro Settings', 'TOCPro', 'manage_options', 'tocpro-settings', 'plugin_settings_page', '', 30);
@@ -95,6 +106,33 @@ function plugin_settings_page() {
             </div>';
             }
         ?>
+        <script>
+                    var activeLink = document.querySelector('.tacpro-link.active');
+
+function showTable(tableId, element) {
+    // Hide all tables
+    var tables = document.querySelectorAll('.table-container');
+    tables.forEach(function(table) {
+        table.style.display = 'none';
+    });
+
+    // Remove "active" class from all menu links
+    var menuLinks = document.querySelectorAll('.tacpro-link');
+    menuLinks.forEach(function(link) {
+        link.classList.remove('active');
+    });
+
+    // Show the selected table
+    var selectedTable = document.getElementById(tableId);
+    if (selectedTable) {
+        selectedTable.style.display = 'block';
+    }
+
+    // Add "active" class to the clicked menu link
+    element.classList.add('active');
+}
+
+        </script>
     <div class="position-div">
         <header class="tacpro-div-head">
             <a class="tacpro-link active" href="javascript:void(0);"  onclick="showTable('genaral',this)" ><img width="20px" src="<?php echo plugins_url('assets/settings-gears_60473.svg', __FILE__); ?>" alt="Icon" /> <span class="tocpro-hide-mob"> Genaral</span></a>
@@ -266,8 +304,29 @@ function plugin_settings_page() {
             </div> 
             <div id="autoinsert" class="table-container">
             <table class="form-table">
-   
-                </table>
+            <tr valign="top">
+    <th scope="row">Auto Insert TOC on Selected Items</th>
+    <td>
+        <?php
+        $selected_post_types = get_option('tocpro_auto_insert_post_types', array('post'));
+
+        $post_types = array(
+            'post' => 'Posts',
+            'page' => 'Pages',
+            'attachment' => 'Media',
+            // Add more post types as needed
+        );
+
+        foreach ($post_types as $post_type => $label) {
+            $checked = is_array($selected_post_types) && in_array($post_type, $selected_post_types) ? 'checked' : '';
+            echo '<label><input type="checkbox" name="tocpro_auto_insert_post_types[]" value="' . esc_attr($post_type) . '" ' . esc_attr($checked) . '> ' . esc_html($label) . '</label><br>';
+        }
+        ?>
+    </td>
+</tr>
+
+
+            </table>
 
             </div>
             <?php submit_button('Save changes','toast-btn', false); ?>
@@ -277,31 +336,6 @@ function plugin_settings_page() {
         </div>
     </div>
     <script>
-        var activeLink = document.querySelector('.tacpro-link.active');
-
-        function showTable(tableId, element) {
-            // Hide all tables
-            var tables = document.querySelectorAll('.table-container');
-            tables.forEach(function(table) {
-                table.style.display = 'none';
-            });
-
-            // Remove "active" class from all menu links
-            var menuLinks = document.querySelectorAll('.tacpro-link');
-            menuLinks.forEach(function(link) {
-                link.classList.remove('active');
-            });
-
-            // Show the selected table
-            var selectedTable = document.getElementById(tableId);
-            if (selectedTable) {
-                selectedTable.style.display = 'block';
-            }
-
-            // Add "active" class to the clicked menu link
-            element.classList.add('active');
-        }
-
             var toast = document.querySelector(".toast");
             var btn = document.querySelector(".toast-btn");
             var close = document.querySelector(".toast-close");
@@ -452,6 +486,8 @@ function register_plugin_settings() {
     register_setting('tocpro-settings', 'gap_from_top');
     register_setting('tocpro-settings', 'tocpro_ol_type'); 
     register_setting('tocpro-settings', 'tocpro_header_label');
+    register_setting('tocpro-settings', 'tocpro_auto_insert_post_types');
+
 }
 add_action('admin_menu', 'add_plugin_menu');
 add_action('admin_init', 'register_plugin_settings');
