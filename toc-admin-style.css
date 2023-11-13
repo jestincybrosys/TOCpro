@@ -138,6 +138,7 @@ input:checked + .slider:before {
   height: 100%;
   margin-top: 50px;
   padding: 20px;
+  border-top: 5px solid #e96367;
 }
 .tacpro-div-section div.table-container {
   display: none;
