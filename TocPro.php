@@ -95,23 +95,12 @@ if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
   </div>';
 }
 ?>
-<script>
-var close = document.querySelector(".toast-close");
-close.addEventListener("click", () =>{
-  toast.classList.remove("active");
-
-  setTimeout(() =>{
-    progress.classList.remove("active");
-  }, 300)
-})
-</script>
-
     <div class="position-div">
         <header class="tacpro-div-head">
-            <a class="tacpro-link" href="#genaral"><img width="20px" src="<?php echo plugins_url('assets/settings-gears_60473.svg', __FILE__); ?>" alt="Icon" /> <span class="tocpro-hide-mob"> Genaral</span></a>
-            <a class="active tacpro-link" href="#style"><img width="20px" src="<?php echo plugins_url('assets/brush_8313131.svg', __FILE__); ?>" alt="Icon" /><span class="tocpro-hide-mob"> Style</span>  </a>
-            <a class="tacpro-link" href="#progressbar"><img width="20px" src="<?php echo plugins_url('assets/load-bar_40471.svg', __FILE__); ?>" alt="Icon" /><span class="tocpro-hide-mob"> Progressbar</span> </a>
-            <a class="tacpro-link" href="#progressbar"><img width="20px" src="<?php echo plugins_url('assets/browser_493223.svg', __FILE__); ?>" alt="Icon" /><span class="tocpro-hide-mob"> Auto Insert</span></a>
+            <a class="tacpro-link active" href="javascript:void(0);"  onclick="showTable('genaral',this)" ><img width="20px" src="<?php echo plugins_url('assets/settings-gears_60473.svg', __FILE__); ?>" alt="Icon" /> <span class="tocpro-hide-mob"> Genaral</span></a>
+            <a class="tacpro-link" href="javascript:void(0);" onclick="showTable('style',this)"><img width="20px" src="<?php echo plugins_url('assets/brush_8313131.svg', __FILE__); ?>" alt="Icon" /><span class="tocpro-hide-mob"> Style</span>  </a>
+            <a class="tacpro-link" href="javascript:void(0);" onclick="showTable('progressbar',this)" ><img width="20px" src="<?php echo plugins_url('assets/load-bar_40471.svg', __FILE__); ?>" alt="Icon" /><span class="tocpro-hide-mob"> Progressbar</span> </a>
+            <a class="tacpro-link" href="javascript:void(0);" onclick="showTable('autoinsert',this)"><img width="20px" src="<?php echo plugins_url('assets/browser_493223.svg', __FILE__); ?>" alt="Icon" /><span class="tocpro-hide-mob"> Auto Insert</span></a>
         </header>
         <section class="tacpro-div-section">
         <form method="post" action="options.php">
@@ -119,6 +108,7 @@ close.addEventListener("click", () =>{
             settings_fields('tocpro-settings');
             do_settings_sections('tocpro-settings');
             ?>
+                <div id="genaral" class="table-container" style="display: block;">
             <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Enable Table of Contents</th>
@@ -130,12 +120,9 @@ close.addEventListener("click", () =>{
                     </td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row">Enable Progress bar</th>
+                    <th scope="row">Header label</th>
                     <td>
-                        <label class="switch">
-                            <input type="checkbox" name="enable_progress_bar" value="1" <?php checked(get_option('enable_progress_bar'), '1'); ?>>
-                            <span class="slider round"></span>
-                        </label>
+                        <input type="text" class="" name="tocpro_header_label" value="<?php echo esc_attr(get_option('tocpro_header_label')); ?>">
                     </td>
                 </tr>
                 <tr valign="top">
@@ -144,24 +131,17 @@ close.addEventListener("click", () =>{
                         <input type="text" class="tocpro-color-picker" name="tocpro_text_color" value="<?php echo esc_attr(get_option('tocpro_text_color')); ?>">
                     </td>
                 </tr>
-                <tr valign="top">
-                    <th scope="row">Header label</th>
-                    <td>
-                        <input type="text" class="" name="tocpro_header_label" value="<?php echo esc_attr(get_option('tocpro_header_label')); ?>">
-                    </td>
-                </tr>
+                
                 <tr valign="top">
                     <th scope="row">Table Background Color</th>
                     <td>
                         <input type="text" class="tocpro-color-picker" name="tocpro_background_color" value="<?php echo esc_attr(get_option('tocpro_background_color')); ?>">
                     </td>
                 </tr>
-                <tr valign="top">
-                    <th scope="row">Progress Bar Color</th>
-                    <td>
-                        <input type="text" class="tocpro-color-picker" name="progress_bar_color" value="<?php echo esc_attr(get_option('progress_bar_color')); ?>">
-                    </td>
-                </tr>
+            </table>
+            </div>
+            <div id="style" class="table-container">
+            <table class="form-table">
                 <tr valign="top">
                     <th scope="row">Width</th>
                     <td>
@@ -200,16 +180,120 @@ close.addEventListener("click", () =>{
                 <tr valign="top">
                     <th scope="row">TOC List Type</th>
                     <td>
-                        <select name="tocpro_ol_type">
-                            <option value="1" <?php selected(get_option('tocpro_ol_type'), '1'); ?>>Decimal</option>
-                            <option value="a" <?php selected(get_option('tocpro_ol_type'), 'a'); ?>>Lower Alpha</option>
-                            <option value="I" <?php selected(get_option('tocpro_ol_type'), 'I'); ?>>Upper Roman</option>
-                            <option value="i" <?php selected(get_option('tocpro_ol_type'), 'i'); ?>>Lower Roman</option>
-                            <option value="A" <?php selected(get_option('tocpro_ol_type'), 'A'); ?>>Upper Alpha</option>
-                        </select>
+                    <select name="tocpro_ol_type">
+    <?php
+    $ol_types = array(
+        '1' => 'Decimal',
+        'a' => 'Lower Alpha',
+        'A' => 'Upper Alpha',
+        'i' => 'Lower Roman',
+        'I' => 'Upper Roman',
+        'circle' => 'Circle',
+        'disc' => 'Filled Circle',
+        'square' => 'Filled Square',
+        'lower-greek' => 'Lower Greek',
+        'upper-greek' => 'Upper Greek',
+        'armenian' => 'Armenian',
+        'cjk-ideographic' => 'CJK Ideographic',
+        'georgian' => 'Georgian',
+        'hebrew' => 'Hebrew',
+        'hiragana' => 'Hiragana',
+        'katakana' => 'Katakana',
+        'decimal-leading-zero' => 'Decimal Leading Zero',
+        'lower-latin' => 'Lower Latin',
+        'upper-latin' => 'Upper Latin',
+        'lower-armenian' => 'Lower Armenian',
+        'upper-armenian' => 'Upper Armenian',
+        'lower-hebrew' => 'Lower Hebrew',
+        'upper-hebrew' => 'Upper Hebrew',
+        'lower-hiragana' => 'Lower Hiragana',
+        'upper-hiragana' => 'Upper Hiragana',
+        'lower-katakana' => 'Lower Katakana',
+        'upper-katakana' => 'Upper Katakana',
+        'decimal-leading-zero' => 'Decimal Leading Zero',
+        'lower-latin' => 'Lower Latin',
+        'upper-latin' => 'Upper Latin',
+        'lower-georgian' => 'Lower Georgian',
+        'upper-georgian' => 'Upper Georgian',
+        'lower-cjk-ideographic' => 'Lower CJK Ideographic',
+        'upper-cjk-ideographic' => 'Upper CJK Ideographic',
+        'malayalam' => 'Malayalam',
+        // Add more options as needed
+    );
+
+    $selected_type = get_option('tocpro_ol_type'); // Get the selected counter type from your settings
+
+    foreach ($ol_types as $value => $label) {
+        $selected = selected($selected_type, $value, false);
+        echo "<option value='$value' $selected>$label</option>";
+    }
+    ?>
+</select>
                     </td>
                 </tr>
             </table>
+            </div>
+
+            <div id="progressbar" class="table-container">
+            <table class="form-table">
+   
+                <tr valign="top">
+                    <th scope="row">Enable Progress bar</th>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" name="enable_progress_bar" value="1" <?php checked(get_option('enable_progress_bar'), '1'); ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr valign="top">
+                    <th scope="row">Progress Bar Color</th>
+                    <td>
+                        <input type="text" class="tocpro-color-picker" name="progress_bar_color" value="<?php echo esc_attr(get_option('progress_bar_color')); ?>">
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Width</th>
+                    <td>
+                    <div class="input-with-px">
+                    <input type="text" class="tocpro-progress-bar-width" name="progress_bar_width" value="<?php echo esc_attr(get_option('progress_bar_width')); ?>">
+                    </div>
+                    </td>
+                </tr>
+                </table>
+
+            </div> 
+            <div id="autoinsert" class="table-container">
+            <table class="form-table">
+   
+                <tr valign="top">
+                    <th scope="row">Enable Progress bar</th>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" name="enable_progress_bar" value="1" <?php checked(get_option('enable_progress_bar'), '1'); ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                </tr>
+
+                <tr valign="top">
+                    <th scope="row">Progress Bar Color</th>
+                    <td>
+                        <input type="text" class="tocpro-color-picker" name="progress_bar_color" value="<?php echo esc_attr(get_option('progress_bar_color')); ?>">
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Width</th>
+                    <td>
+                    <div class="input-with-px">
+                    <input type="text" class="tocpro-progress-bar-width" name="progress_bar_width" value="<?php echo esc_attr(get_option('progress_bar_width')); ?>">
+                    </div>
+                    </td>
+                </tr>
+                </table>
+
+            </div>
             <?php submit_button('Save changes','toast-btn', false); ?>
         </form>
         </section>
@@ -217,6 +301,31 @@ close.addEventListener("click", () =>{
         </div>
     </div>
     <script>
+        var activeLink = document.querySelector('.tacpro-link.active');
+
+        function showTable(tableId, element) {
+            // Hide all tables
+            var tables = document.querySelectorAll('.table-container');
+            tables.forEach(function(table) {
+                table.style.display = 'none';
+            });
+
+            // Remove "active" class from all menu links
+            var menuLinks = document.querySelectorAll('.tacpro-link');
+            menuLinks.forEach(function(link) {
+                link.classList.remove('active');
+            });
+
+            // Show the selected table
+            var selectedTable = document.getElementById(tableId);
+            if (selectedTable) {
+                selectedTable.style.display = 'block';
+            }
+
+            // Add "active" class to the clicked menu link
+            element.classList.add('active');
+        }
+
 var toast = document.querySelector(".toast");
 var btn = document.querySelector(".toast-btn");
 var close = document.querySelector(".toast-close");
@@ -242,6 +351,8 @@ close.addEventListener("click", () =>{
     progress.classList.remove("active");
   }, 300)
 })
+
+
 </script>
 
     <?php
@@ -260,6 +371,7 @@ function init_color_picker() {
         jQuery(document).ready(function($) {
             $('.tocpro-color-picker').wpColorPicker();
         });
+        
     </script>
     <?php
 }
@@ -278,14 +390,47 @@ $selected_type = get_option('tocpro_ol_type'); // Get the selected counter type 
 $counter_styles = array(
     '1' => 'decimal',
     'a' => 'lower-alpha',
-    'I' => 'upper-roman',
-    'i' => 'lower-roman',
     'A' => 'upper-alpha',
+    'i' => 'lower-roman',
+    'I' => 'upper-roman',
+    'circle' => 'circle',
+    'disc' => 'disc',
+    'square' => 'square',
+    'lower-greek' => 'lower-greek',
+    'upper-greek' => 'upper-greek',
+    'armenian' => 'armenian',
+    'cjk-ideographic' => 'cjk-ideographic',
+    'georgian' => 'georgian',
+    'hebrew' => 'hebrew',
+    'hiragana' => 'hiragana',
+    'katakana' => 'katakana',
+    'decimal-leading-zero' => 'decimal-leading-zero',
+    'lower-latin' => 'lower-latin',
+    'upper-latin' => 'upper-latin',
+    'lower-armenian' => 'lower-armenian',
+    'upper-armenian' => 'upper-armenian',
+    'lower-hebrew' => 'lower-hebrew',
+    'upper-hebrew' => 'upper-hebrew',
+    'lower-hiragana' => 'lower-hiragana',
+    'upper-hiragana' => 'upper-hiragana',
+    'lower-katakana' => 'lower-katakana',
+    'upper-katakana' => 'upper-katakana',
+    'decimal-leading-zero' => 'decimal-leading-zero',
+    'lower-latin' => 'lower-latin',
+    'upper-latin' => 'upper-latin',
+    'lower-georgian' => 'lower-georgian',
+    'upper-georgian' => 'upper-georgian',
+    'lower-cjk-ideographic' => 'lower-cjk-ideographic',
+    'upper-cjk-ideographic' => 'upper-cjk-ideographic',
+    'malayalam' => 'malayalam',
+    // Add more styles as needed
 );
 
 $counter_style = isset($counter_styles[$selected_type]) ? $counter_styles[$selected_type] : 'decimal';
 
 ?>
+
+
     <style>
         .tocpro {
             color: <?php echo esc_attr(get_option('tocpro_text_color')); ?>;
@@ -304,15 +449,15 @@ $counter_style = isset($counter_styles[$selected_type]) ? $counter_styles[$selec
             max-width: <?php echo esc_attr(get_option('tocpro_max_width')); ?>px !important;
         }      
         .custom-ol a:before {
-            content: counters(item, '.' , <?php echo $counter_style; ?>) ' ';
+            content: counters(item, '.' , <?php echo $counter_style; ?>) '. ';
+        }
+        .tocpro-progress-bar {
+            height:<?php echo esc_attr(get_option('progress_bar_width')); ?>px;
         }
     </style>
         <script>
-    var offset = parseInt(<?php echo get_option('gap_from_top', 20); ?>);
-
-
+            var offset = parseInt(<?php echo get_option('gap_from_top', 20); ?>);
     </script>
-
     <?php
 }
 add_action('wp_head', 'include_tocpro_styles');
@@ -323,6 +468,7 @@ function register_plugin_settings() {
     register_setting('tocpro-settings', 'tocpro_text_color');
     register_setting('tocpro-settings', 'tocpro_background_color');
     register_setting('tocpro-settings', 'progress_bar_color');
+    register_setting('tocpro-settings', 'progress_bar_width');
     register_setting('tocpro-settings', 'tocpro_width');
     register_setting('tocpro-settings', 'tocpro_min_width');
     register_setting('tocpro-settings', 'tocpro_max_width');

@@ -1,5 +1,7 @@
 body{
-  overflow: hidden;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+
 }
 .slider.round {
   border-radius: 34px;
@@ -136,6 +138,9 @@ input:checked + .slider:before {
   height: 100%;
   margin-top: 50px;
   padding: 20px;
+}
+.tacpro-div-section div.table-container {
+  display: none;
 }
 .input-with-px {
   position: relative;
@@ -292,11 +297,7 @@ justify-content: center;  width: 130px;
 .progress.active::before{
   animation: progress 5s linear forwards;
 }
-@keyframes progress {
-  100%{
-    right: 100%;
-  }
-}
+
 .toast-btn{
   font-size: 16px !important;
   font-weight: 700;
