@@ -17,7 +17,7 @@ function generate_table_of_contents($content) {
             $toc .= '<p>' . esc_attr(get_option('tocpro_header_label')) . '</p>';
             // $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; 
             $stack = array();
-
+            $toc .= '<ol type="' . esc_attr(get_option('tocpro_ol_type')) . '">';
             foreach ($matches[1] as $index => $level) {
                 $id = 'toc-' . sanitize_title_with_dashes(strip_tags($matches[0][$index]));
                 $headingText = strip_tags($matches[0][$index]);
@@ -49,7 +49,7 @@ function generate_table_of_contents($content) {
                 array_pop($stack);
             }
 
-            $toc .= '</div>';
+            $toc .= '</ol></div>';
             $content = $toc . $content;
         }
     }
@@ -267,30 +267,6 @@ function plugin_settings_page() {
             <div id="autoinsert" class="table-container">
             <table class="form-table">
    
-                <tr valign="top">
-                    <th scope="row">Enable Progress bar</th>
-                    <td>
-                        <label class="switch">
-                            <input type="checkbox" name="enable_progress_bar" value="1" <?php checked(get_option('enable_progress_bar'), '1'); ?>>
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
-                </tr>
-
-                <tr valign="top">
-                    <th scope="row">Progress Bar Color</th>
-                    <td>
-                        <input type="text" class="tocpro-color-picker" name="progress_bar_color" value="<?php echo esc_attr(get_option('progress_bar_color')); ?>">
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row">Width</th>
-                    <td>
-                    <div class="input-with-px">
-                    <input type="text" class="tocpro-progress-bar-width" name="progress_bar_width" value="<?php echo esc_attr(get_option('progress_bar_width')); ?>">
-                    </div>
-                    </td>
-                </tr>
                 </table>
 
             </div>
