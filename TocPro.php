@@ -455,9 +455,12 @@ $counter_style = isset($counter_styles[$selected_type]) ? $counter_styles[$selec
             height:<?php echo esc_attr(get_option('progress_bar_width')); ?>px;
         }
     </style>
-        <script>
-            var offset = parseInt(<?php echo get_option('gap_from_top', 20); ?>);
-    </script>
+
+<script>
+    var offset = parseInt(<?php $gap_from_top = get_option('gap_from_top', 20); echo $gap_from_top; ?>);
+</script>
+
+
     <?php
 }
 add_action('wp_head', 'include_tocpro_styles');
