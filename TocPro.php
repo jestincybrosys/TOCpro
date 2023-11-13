@@ -80,21 +80,21 @@ function plugin_settings_page() {
 
         <div class="tocpro-head"><h2>TOCPro Settings</h2><p>Globel Settings</p></div>
         <?php
-if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
-    echo '<div class="toast">
-    <div class="toast-content">
-      <img width="20px" src="' . plugins_url('assets/accept.svg', __FILE__) . '" alt="Icon" />
-      <div class="message">
-        <span class="message-text text-1">Success</span>
-        <span class="message-text text-2">Your changes have been saved</span>
-      </div>
-    </div>
-    <img class="toast-close" width="10px" src="' . plugins_url('assets/close.svg', __FILE__) . '" alt="Icon" />
+            if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
+                echo '<div class="toast">
+                <div class="toast-content">
+                <img width="20px" src="' . plugins_url('assets/accept.svg', __FILE__) . '" alt="Icon" />
+                <div class="message">
+                    <span class="message-text text-1">Success</span>
+                    <span class="message-text text-2">Your changes have been saved</span>
+                </div>
+                </div>
+                <img class="toast-close" width="10px" src="' . plugins_url('assets/close.svg', __FILE__) . '" alt="Icon" />
 
-    <div class="progress"></div>
-  </div>';
-}
-?>
+                <div class="progress"></div>
+            </div>';
+            }
+        ?>
     <div class="position-div">
         <header class="tacpro-div-head">
             <a class="tacpro-link active" href="javascript:void(0);"  onclick="showTable('genaral',this)" ><img width="20px" src="<?php echo plugins_url('assets/settings-gears_60473.svg', __FILE__); ?>" alt="Icon" /> <span class="tocpro-hide-mob"> Genaral</span></a>
@@ -181,54 +181,54 @@ if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
                     <th scope="row">TOC List Type</th>
                     <td>
                     <select name="tocpro_ol_type">
-    <?php
-    $ol_types = array(
-        '1' => 'Decimal',
-        'a' => 'Lower Alpha',
-        'A' => 'Upper Alpha',
-        'i' => 'Lower Roman',
-        'I' => 'Upper Roman',
-        'circle' => 'Circle',
-        'disc' => 'Filled Circle',
-        'square' => 'Filled Square',
-        'lower-greek' => 'Lower Greek',
-        'upper-greek' => 'Upper Greek',
-        'armenian' => 'Armenian',
-        'cjk-ideographic' => 'CJK Ideographic',
-        'georgian' => 'Georgian',
-        'hebrew' => 'Hebrew',
-        'hiragana' => 'Hiragana',
-        'katakana' => 'Katakana',
-        'decimal-leading-zero' => 'Decimal Leading Zero',
-        'lower-latin' => 'Lower Latin',
-        'upper-latin' => 'Upper Latin',
-        'lower-armenian' => 'Lower Armenian',
-        'upper-armenian' => 'Upper Armenian',
-        'lower-hebrew' => 'Lower Hebrew',
-        'upper-hebrew' => 'Upper Hebrew',
-        'lower-hiragana' => 'Lower Hiragana',
-        'upper-hiragana' => 'Upper Hiragana',
-        'lower-katakana' => 'Lower Katakana',
-        'upper-katakana' => 'Upper Katakana',
-        'decimal-leading-zero' => 'Decimal Leading Zero',
-        'lower-latin' => 'Lower Latin',
-        'upper-latin' => 'Upper Latin',
-        'lower-georgian' => 'Lower Georgian',
-        'upper-georgian' => 'Upper Georgian',
-        'lower-cjk-ideographic' => 'Lower CJK Ideographic',
-        'upper-cjk-ideographic' => 'Upper CJK Ideographic',
-        'malayalam' => 'Malayalam',
-        // Add more options as needed
-    );
+                    <?php
+                    $ol_types = array(
+                        '1' => 'Decimal',
+                        'a' => 'Lower Alpha',
+                        'A' => 'Upper Alpha',
+                        'i' => 'Lower Roman',
+                        'I' => 'Upper Roman',
+                        'circle' => 'Circle',
+                        'disc' => 'Filled Circle',
+                        'square' => 'Filled Square',
+                        'lower-greek' => 'Lower Greek',
+                        'upper-greek' => 'Upper Greek',
+                        'armenian' => 'Armenian',
+                        'cjk-ideographic' => 'CJK Ideographic',
+                        'georgian' => 'Georgian',
+                        'hebrew' => 'Hebrew',
+                        'hiragana' => 'Hiragana',
+                        'katakana' => 'Katakana',
+                        'decimal-leading-zero' => 'Decimal Leading Zero',
+                        'lower-latin' => 'Lower Latin',
+                        'upper-latin' => 'Upper Latin',
+                        'lower-armenian' => 'Lower Armenian',
+                        'upper-armenian' => 'Upper Armenian',
+                        'lower-hebrew' => 'Lower Hebrew',
+                        'upper-hebrew' => 'Upper Hebrew',
+                        'lower-hiragana' => 'Lower Hiragana',
+                        'upper-hiragana' => 'Upper Hiragana',
+                        'lower-katakana' => 'Lower Katakana',
+                        'upper-katakana' => 'Upper Katakana',
+                        'decimal-leading-zero' => 'Decimal Leading Zero',
+                        'lower-latin' => 'Lower Latin',
+                        'upper-latin' => 'Upper Latin',
+                        'lower-georgian' => 'Lower Georgian',
+                        'upper-georgian' => 'Upper Georgian',
+                        'lower-cjk-ideographic' => 'Lower CJK Ideographic',
+                        'upper-cjk-ideographic' => 'Upper CJK Ideographic',
+                        'malayalam' => 'Malayalam',
+                        // Add more options as needed
+                    );
 
-    $selected_type = get_option('tocpro_ol_type'); // Get the selected counter type from your settings
+                    $selected_type = get_option('tocpro_ol_type'); // Get the selected counter type from your settings
 
-    foreach ($ol_types as $value => $label) {
-        $selected = selected($selected_type, $value, false);
-        echo "<option value='$value' $selected>$label</option>";
-    }
-    ?>
-</select>
+                    foreach ($ol_types as $value => $label) {
+                        $selected = selected($selected_type, $value, false);
+                        echo "<option value='$value' $selected>$label</option>";
+                    }
+                    ?>
+                </select>
                     </td>
                 </tr>
             </table>
@@ -326,34 +326,32 @@ if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
             element.classList.add('active');
         }
 
-var toast = document.querySelector(".toast");
-var btn = document.querySelector(".toast-btn");
-var close = document.querySelector(".toast-close");
-var progress = document.querySelector(".progress");
+            var toast = document.querySelector(".toast");
+            var btn = document.querySelector(".toast-btn");
+            var close = document.querySelector(".toast-close");
+            var progress = document.querySelector(".progress");
 
-btn.addEventListener("click", () =>{
-  toast.classList.add("active");
-  progress.classList.add("active");
+            btn.addEventListener("click", () =>{
+            toast.classList.add("active");
+            progress.classList.add("active");
 
-  setTimeout(() =>{
-    toast.classList.remove("active");
-  }, 2000)
+            setTimeout(() =>{
+                toast.classList.remove("active");
+            }, 2000)
 
-  setTimeout(() =>{
-    progress.classList.remove("active");
-  }, 2300)
-})
+            setTimeout(() =>{
+                progress.classList.remove("active");
+            }, 2300)
+            })
 
-close.addEventListener("click", () =>{
-  toast.classList.remove("active");
+            close.addEventListener("click", () =>{
+            toast.classList.remove("active");
 
-  setTimeout(() =>{
-    progress.classList.remove("active");
-  }, 300)
-})
-
-
-</script>
+            setTimeout(() =>{
+                progress.classList.remove("active");
+            }, 300)
+            })
+        </script>
 
     <?php
 }

@@ -26,6 +26,8 @@ jQuery(document).ready(function ($) {
         800 // You can adjust the scroll speed by changing the duration (800ms in this example).
     );
 });
+
+
 });
 
 
