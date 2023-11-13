@@ -90,7 +90,7 @@ function plugin_settings_page() {
         <div class="wrap tocpro-main">
 
         <div class="tocpro-head"><h2>TOCPro Settings</h2><p>Globel Settings</p></div>
-        <?php
+        <!-- <?php
             if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
                 echo '<div class="toast">
                 <div class="toast-content">
@@ -105,7 +105,7 @@ function plugin_settings_page() {
                 <div class="progress"></div>
             </div>';
             }
-        ?>
+        ?> -->
         <script>
                     var activeLink = document.querySelector('.tacpro-link.active');
 
@@ -305,25 +305,38 @@ function showTable(tableId, element) {
             <div id="autoinsert" class="table-container">
             <table class="form-table">
             <tr valign="top">
-    <th scope="row">Auto Insert TOC on Selected Items</th>
-    <td>
-        <?php
-        $selected_post_types = get_option('tocpro_auto_insert_post_types', array('post'));
+                <th scope="row">Auto Insert TOC</th>
+                <td>
+                    <?php
+                    $selected_post_types = get_option('tocpro_auto_insert_post_types', array('post'));
 
-        $post_types = array(
-            'post' => 'Posts',
-            'page' => 'Pages',
-            'attachment' => 'Media',
-            // Add more post types as needed
-        );
+                    $post_types = array(
+                        'post' => 'Posts',
+                        'page' => 'Pages',
+                        'attachment' => 'Media',
+                        // Add more post types as needed
+                    );
 
-        foreach ($post_types as $post_type => $label) {
-            $checked = is_array($selected_post_types) && in_array($post_type, $selected_post_types) ? 'checked' : '';
-            echo '<label><input type="checkbox" name="tocpro_auto_insert_post_types[]" value="' . esc_attr($post_type) . '" ' . esc_attr($checked) . '> ' . esc_html($label) . '</label><br>';
-        }
-        ?>
-    </td>
-</tr>
+                    foreach ($post_types as $post_type => $label) {
+                        $checked = is_array($selected_post_types) && in_array($post_type, $selected_post_types) ? 'checked' : '';
+                        echo '<label><input type="checkbox" name="tocpro_auto_insert_post_types[]" value="' . esc_attr($post_type) . '" ' . esc_attr($checked) . '> ' . esc_html($label) . '</label><br>';
+                    }
+                    ?>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">TOC Position</th>
+                <td>
+                    <select name="tocpro_auto_insert_position">
+                        <option value="before" <?php selected(get_option('tocpro_auto_insert_position'), 'before'); ?>>Before first heading (default)</option>
+                        <option value="after" <?php selected(get_option('tocpro_auto_insert_position'), 'after'); ?>>After first heading</option>
+                        <option value="afterpara" <?php selected(get_option('tocpro_auto_insert_position'), 'afterpara'); ?>>After first paragraph</option>
+                        <option value="aftercustompara" <?php selected(get_option('tocpro_auto_insert_position'), 'aftercustompara'); ?>>After paragraph number</option>
+                        <option value="top" <?php selected(get_option('tocpro_auto_insert_position'), 'top'); ?>>Top</option>
+                        <option value="bottom" <?php selected(get_option('tocpro_auto_insert_position'), 'bottom'); ?>>Bottom</option>
+                    </select>
+                </td>
+            </tr>
 
 
             </table>
@@ -466,6 +479,7 @@ $counter_style = isset($counter_styles[$selected_type]) ? $counter_styles[$selec
 
 <script>
     var offset = parseInt(<?php $gap_from_top = get_option('gap_from_top', 20); echo $gap_from_top; ?>);
+    if (isNaN(offset)) {offset = 20;}
 </script>
 
 
@@ -487,7 +501,7 @@ function register_plugin_settings() {
     register_setting('tocpro-settings', 'tocpro_ol_type'); 
     register_setting('tocpro-settings', 'tocpro_header_label');
     register_setting('tocpro-settings', 'tocpro_auto_insert_post_types');
-
+    register_setting('tocpro-settings', 'tocpro_auto_insert_position');
 }
 add_action('admin_menu', 'add_plugin_menu');
 add_action('admin_init', 'register_plugin_settings');

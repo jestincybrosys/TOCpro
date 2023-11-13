@@ -10,10 +10,7 @@ jQuery(document).ready(function ($) {
     $(".tocpro-progress-bar").css("width", progress + "%");
   });
   
-  if (isNaN(offset)) {
-    // Provide a default value if the conversion fails
-    offset = 20;
-}
+
   $(".tocpro a").click(function (event) {
     event.preventDefault();
     var target = $(this).attr("href");

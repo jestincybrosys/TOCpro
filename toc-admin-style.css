@@ -134,11 +134,13 @@ input:checked + .slider:before {
 }
 .tacpro-div-section {
   background-color: #ffffff;
-  border-radius: 15px;
+  border-radius: 10px;
   height: 100%;
   margin-top: 50px;
   padding: 20px;
-  border-top: 5px solid #e96367;
+  border-top: 4px solid #e96367;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px -8px 15px;
+
 }
 .tacpro-div-section div.table-container {
   display: none;
