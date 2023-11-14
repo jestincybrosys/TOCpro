@@ -1,0 +1,64 @@
+
+// function generate_table_of_contents($content) {
+    //     $auto_insert_pages = get_option('tocpro_auto_insert_pages', array());
+    //     $auto_insert_post_types = get_option('tocpro_auto_insert_post_types', array('post'));
+    
+    //     // Check if there are no auto-insert pages or post types selected
+    //     if (get_option('enable_table_of_contents') == '1' && empty($auto_insert_pages) && empty($auto_insert_post_types)) {
+    //         return $content; // Return the original content if nothing is selected
+    //     }
+    
+    //     // Check if the current page or post type is in the list for auto-insertion
+    //     if (get_option('enable_table_of_contents') == '1' && (empty($auto_insert_pages) || in_array(get_the_ID(), $auto_insert_pages)) &&
+    //         (empty($auto_insert_post_types) || in_array(get_post_type(), $auto_insert_post_types))) {
+    
+    //         $pattern = '/<h([2-6])[^>]*>.*?<\/h\1>/i';
+    //         preg_match_all($pattern, $content, $matches);
+    
+    //         if (!empty($matches[0])) {
+    //             $toc = '<div class="tocpro tocpro-set-width">';
+    //             if (get_option('enable_table_label') == '1'){
+    //             $toc .= '<p class="tocpro-table-p">' . esc_attr(get_option('tocpro_header_label')) . '</p>';
+    //             }
+    //             $toc .= '<ol style="padding-inline-start: 0;" type="' . esc_attr(get_option('tocpro_ol_type')) . '">'; 
+    //             $stack = array();
+    
+    //             foreach ($matches[1] as $index => $level) {
+    //                 $id = 'toc-' . sanitize_title_with_dashes(strip_tags($matches[0][$index]));
+    //                 $headingText = strip_tags($matches[0][$index]);
+    //                 $words = explode(' ', $headingText);
+    //                 $shortenedText = implode(' ', array_slice($words, 0, 5));
+    //                 $hasMoreContent = count($words) > 5;
+    
+    //                 while ($level > end($stack)) {
+    //                     $toc .= '<ol class="custom-ol"  type="' . esc_attr(get_option('tocpro_ol_type')) . '">';
+    //                     array_push($stack, $level);
+    //                 }
+    
+    //                 while ($level < end($stack)) {
+    //                     $toc .= '</ol></li>';
+    //                     array_pop($stack);
+    //                 }
+    
+    //                 $toc .= '<li><a href="#' . $id . '">' . $shortenedText;
+    //                 if ($hasMoreContent) {
+    //                     $toc .= '...';
+    //                 }
+    //                 $toc .= '</a>';
+    
+    //                 $content = str_replace($matches[0][$index], '<h' . $level . ' id="' . $id . '"> ' . strip_tags($matches[0][$index]) . '</h' . $level . '>', $content);
+    //             }
+    
+    //             while (!empty($stack)) {
+    //                 $toc .= '</ol>';
+    //                 array_pop($stack);
+    //             }
+    
+    //             $toc .= '</ol></div>';
+    //             $content = $toc . $content;
+    //         }
+    //     }
+    
+    //     return $content;
+    // }
+    

@@ -323,3 +323,16 @@ justify-content: center;  width: 130px;
 .toast-btn:hover {
   background-color: #df343a !important; /* Change the background color on hover */
 }
+.tocpro-td{
+  display: flex;
+  flex-direction: column;
+}
+.tocpro-td label{
+  padding-bottom: 15px;
+}
+.tocpro ol{
+padding-inline-start: 0;
+}
+p.tocpro-table-p{
+  margin: 15px 0 0 15px;
+}
