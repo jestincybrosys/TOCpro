@@ -27,5 +27,49 @@ jQuery(document).ready(function ($) {
 
 });
 
+    document.addEventListener('DOMContentLoaded', function () {
+        function syncFields(inputFields, sourceField) {
+            var sourceValue = sourceField.value;
+            inputFields.forEach(function (field) {
+                field.value = sourceValue;
+            });
+        }
 
+        function setupSync(linkButton, fields, isSyncing) {
+            linkButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                isSyncing = !isSyncing;
+                linkButton.classList.toggle('sync', isSyncing);
+                
+                // If syncing is enabled, sync the fields
+                if (isSyncing) {
+                    syncFields(fields, fields[0]);
+                }
+            });
 
+            fields.forEach(function (inputField) {
+                inputField.addEventListener('input', function () {
+                    // Check if syncing is enabled before syncing
+                    if (isSyncing) {
+                        syncFields(fields, inputField);
+                    }
+                });
+            });
+        }
+
+        // Padding Fields
+        var paddingLinkButton = document.querySelector('.padding-link-values');
+        if (paddingLinkButton) {
+            var isPaddingSyncing = false;
+            var paddingFields = document.querySelectorAll('.padding-fields input');
+            setupSync(paddingLinkButton, paddingFields, isPaddingSyncing);
+        }
+
+        // Margin Fields
+        var marginLinkButton = document.querySelector('.margin-link-values');
+        if (marginLinkButton) {
+            var isMarginSyncing = false;
+            var marginFields = document.querySelectorAll('.margin-fields input');
+            setupSync(marginLinkButton, marginFields, isMarginSyncing);
+        }
+    });

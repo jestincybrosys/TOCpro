@@ -50,11 +50,11 @@ function generate_table_of_contents($content) {
                     array_pop($stack);
                 }
 
-                $toc .= '<li><a href="#' . $id . '">' . $shortenedText;
+                $toc .= '<li><div><a href="#' . $id . '">' . $shortenedText;
                 if ($hasMoreContent) {
                     $toc .= '...';
                 }
-                $toc .= '</a>';
+                $toc .= '</a></div>';
 
                 $content = str_replace($matches[0][$index], '<h' . $level . ' id="' . $id . '"> ' . strip_tags($matches[0][$index]) . '</h' . $level . '>', $content);
             }
@@ -67,7 +67,6 @@ function generate_table_of_contents($content) {
             $toc .= '</ol></div>';
         }
 
-        // Define an array to map positions to actions
         $position_actions = array(
             'before'         => function ($content, $toc) { return $toc . $content; },
             'after'          => function ($content, $toc) { return $content . $toc; },
@@ -75,23 +74,15 @@ function generate_table_of_contents($content) {
                 $paragraphs = explode('</p>', $content, 2);
                 return (count($paragraphs) > 1) ? $paragraphs[0] . '</p>' . $toc . $paragraphs[1] : $content;
             },
-            // 'aftercustompara' => function ($content, $toc) {
-            //     $custom_paragraph_number = 3; // Example: Move after the third paragraph
-            //     $paragraphs = explode('</p>', $content, $custom_paragraph_number + 1);
-            //     return (count($paragraphs) > $custom_paragraph_number) ? implode('</p>', array_slice($paragraphs, 0, $custom_paragraph_number)) . $toc . implode('</p>', array_slice($paragraphs, $custom_paragraph_number)) : $content;
-            // },
             'top'            => function ($content, $toc) { return $toc . $content; },
             'bottom'         => function ($content, $toc) { return $content . $toc; },
         );
 
-        // Apply the action based on the selected position
         $content = $position_actions[$auto_insert_position]($content, $toc);
     }
 
     return $content;
 }
-
-
 
 function generate_individual_progress_bar($content) {
     if (get_option('enable_progress_bar') == '1' && (is_single() || is_page())) {
@@ -134,25 +125,19 @@ function plugin_settings_page() {
             var activeLink = document.querySelector('.tacpro-link.active');
 
             function showTable(tableId, element) {
-                // Hide all tables
                 var tables = document.querySelectorAll('.table-container');
                 tables.forEach(function(table) {
                     table.style.display = 'none';
                 });
 
-                // Remove "active" class from all menu links
                 var menuLinks = document.querySelectorAll('.tacpro-link');
                 menuLinks.forEach(function(link) {
                     link.classList.remove('active');
                 });
-
-                // Show the selected table
                 var selectedTable = document.getElementById(tableId);
                 if (selectedTable) {
                     selectedTable.style.display = 'block';
                 }
-
-                // Add "active" class to the clicked menu link
                 element.classList.add('active');
             }
         </script>
@@ -217,7 +202,7 @@ function plugin_settings_page() {
                     <th scope="row">Min Widtgh</th>
                     <td>
                         <div class="input-with-px">
-                            <input type="text" class="min_width_field"  name="tocpro_min_width" value="<?php echo esc_attr(get_option('tocpro_min_width')); ?>">
+                            <input type="number" class="min_width_field"  name="tocpro_min_width" value="<?php echo esc_attr(get_option('tocpro_min_width')); ?>">
                         </div>
                     </td>
                 </tr>
@@ -225,14 +210,11 @@ function plugin_settings_page() {
                     <th scope="row">Max width</th>
                     <td>
                     <div class="input-with-px">
-                        <input type="text" class="" name="tocpro_max_width" value="<?php echo esc_attr(get_option('tocpro_max_width')); ?>">
+                        <input type="number" class="" name="tocpro_max_width" value="<?php echo esc_attr(get_option('tocpro_max_width')); ?>">
                 </div>
                     </td>
                 </tr>
-     
-                </table>
-                
-               
+               </table>
             </table>
             </div>
             <div id="style" class="table-container">
@@ -250,7 +232,7 @@ function plugin_settings_page() {
                     <th scope="row">Table Header size</th>
                     <td>
                     <div class="input-with-px">
-                        <input type="text"  name="tocpro_label_size" value="<?php echo esc_attr(get_option('tocpro_label_size')); ?>">
+                        <input type="number"  name="tocpro_label_size" value="<?php echo esc_attr(get_option('tocpro_label_size')); ?>">
                     </div>
                     </td>
                 </tr>
@@ -267,7 +249,7 @@ function plugin_settings_page() {
                 <tr valign="top">
                     <th scope="row">Table Text Size</th>
                     <td>
-                        <input type="text" class="" name="tocpro_text_size" value="<?php echo esc_attr(get_option('tocpro_text_size')); ?>">
+                        <input type="number" class="" name="tocpro_text_size" value="<?php echo esc_attr(get_option('tocpro_text_size')); ?>">
                     </td>
                 </tr>
                 <tr valign="top">
@@ -280,11 +262,73 @@ function plugin_settings_page() {
                     <th scope="row">Gap from Top (in pixels)</th>
                     <td>
                     <div class="input-with-px">
-                        <input type="text" name="gap_from_top" value="<?php echo esc_attr(get_option('gap_from_top', 20)); ?>">
+                        <input type="number" name="gap_from_top" value="<?php echo esc_attr(get_option('gap_from_top', 20)); ?>">
                         </div>
                     </td>
                 </tr>
-       
+                <tr valign="top">
+                    <th scope="row">Padding</th>
+                    <td>
+                        <div class="padding-fields">
+                            <div class="padding-field">
+                                <label>Top</label>
+                                <input type="number" class="padding-top-field" name="tocpro_padding_top" value="<?php echo esc_attr(get_option('tocpro_padding_top')); ?>">
+                            </div>
+
+                            <div class="padding-field">
+                                <label>Bottom</label>
+                                <input type="number" class="padding-bottom-field" name="tocpro_padding_bottom" value="<?php echo esc_attr(get_option('tocpro_padding_bottom')); ?>">
+                            </div>
+
+                            <div class="padding-field">
+                                <label>Left</label>
+                                <input type="number" class="padding-left-field" name="tocpro_padding_left" value="<?php echo esc_attr(get_option('tocpro_padding_left')); ?>">
+                            </div>
+
+                            <div class="padding-field">
+                                <label>Right</label>
+                                <input type="number" class="padding-right-field" name="tocpro_padding_right" value="<?php echo esc_attr(get_option('tocpro_padding_right')); ?>">
+                            </div>
+
+                            <a href="#" class="link-values padding-link-values" data-target=".padding-fields input">
+                                <img src="<?php echo plugins_url('assets/link.png', __FILE__); ?>" alt="Link Values">
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <!-- Your existing HTML code for padding fields -->
+
+                <!-- Margin Fields -->
+                <tr valign="top">
+                    <th scope="row">Margin</th>
+                    <td>
+                        <div class="margin-fields">
+                            <div class="margin-field">
+                                <label>Top</label>
+                                <input type="number" class="margin-top-field" name="tocpro_margin_top" value="<?php echo esc_attr(get_option('tocpro_margin_top')); ?>">
+                            </div>
+
+                            <div class="margin-field">
+                                <label>Bottom</label>
+                                <input type="number" class="margin-bottom-field" name="tocpro_margin_bottom" value="<?php echo esc_attr(get_option('tocpro_margin_bottom')); ?>">
+                            </div>
+
+                            <div class="margin-field">
+                                <label>Left</label>
+                                <input type="number" class="margin-left-field" name="tocpro_margin_left" value="<?php echo esc_attr(get_option('tocpro_margin_left')); ?>">
+                            </div>
+
+                            <div class="margin-field">
+                                <label>Right</label>
+                                <input type="number" class="margin-right-field" name="tocpro_margin_right" value="<?php echo esc_attr(get_option('tocpro_margin_right')); ?>">
+                            </div>
+
+                            <a href="#" class="link-values margin-link-values" data-target=".margin-fields input">
+                                <img src="<?php echo plugins_url('assets/link.png', __FILE__); ?>" alt="Link Values">
+                            </a>
+                        </div>
+                    </td>
+                </tr>       
                 <table class="form-table">
                 <h2 class="tocpro-table-head">TABLE STYLE</h2>
                 <tr valign="top">
@@ -390,7 +434,6 @@ function plugin_settings_page() {
                         'post' => 'Posts',
                         'page' => 'Pages',
                         'attachment' => 'Media',
-                        // Add more post types as needed
                     );
 
                     foreach ($post_types as $post_type => $label) {
@@ -407,7 +450,6 @@ function plugin_settings_page() {
                         <option value="before" <?php selected(get_option('tocpro_auto_insert_position'), 'before'); ?>>Before first heading (default)</option>
                         <option value="after" <?php selected(get_option('tocpro_auto_insert_position'), 'after'); ?>>After first heading</option>
                         <option value="afterpara" <?php selected(get_option('tocpro_auto_insert_position'), 'afterpara'); ?>>After first paragraph</option>
-                        <!-- <option value="aftercustompara" <?php selected(get_option('tocpro_auto_insert_position'), 'aftercustompara'); ?>>After paragraph number</option> -->
                         <option value="top" <?php selected(get_option('tocpro_auto_insert_position'), 'top'); ?>>Top</option>
                         <option value="bottom" <?php selected(get_option('tocpro_auto_insert_position'), 'bottom'); ?>>Bottom</option>
                     </select>
@@ -481,9 +523,8 @@ function init_color_picker() {
             if (empty($minWidth)) {
                 $minWidth = 'unset';
             }
-            $selected_type = get_option('tocpro_ol_type'); // Get the selected counter type from your settings
+            $selected_type = get_option('tocpro_ol_type');
 
-            // Define an array to map the counter styles to their CSS values
             $counter_styles = array(
                 '1' => 'decimal',
                 'a' => 'lower-alpha',
@@ -520,7 +561,6 @@ function init_color_picker() {
                 'lower-cjk-ideographic' => 'lower-cjk-ideographic',
                 'upper-cjk-ideographic' => 'upper-cjk-ideographic',
                 'malayalam' => 'malayalam',
-                // Add more styles as needed
             );
 
             $counter_style = isset($counter_styles[$selected_type]) ? $counter_styles[$selected_type] : 'decimal';
@@ -540,6 +580,8 @@ function init_color_picker() {
         .tocpro a{
             color: <?php echo esc_attr(get_option('tocpro_text_color')); ?>;
             font-size: <?php echo esc_attr(get_option('tocpro_text_size')); ?>px;
+            margin: <?php echo esc_attr(get_option('tocpro_margin_top')); ?>.0px <?php echo esc_attr(get_option('tocpro_margin_right')); ?>.0px <?php echo esc_attr(get_option('tocpro_margin_bottom')); ?>.0px <?php echo esc_attr(get_option('tocpro_margin_left')); ?>.0px;
+            padding: <?php echo esc_attr(get_option('tocpro_padding_top')); ?>.0px <?php echo esc_attr(get_option('tocpro_padding_right')); ?>.0px <?php echo esc_attr(get_option('tocpro_padding_bottom')); ?>.0px <?php echo esc_attr(get_option('tocpro_padding_left')); ?>.0px;
 
         }
         .tocpro-progress-bar {
@@ -568,29 +610,45 @@ function init_color_picker() {
 add_action('wp_head', 'include_tocpro_styles');
 
 function register_plugin_settings() {
-    register_setting('tocpro-settings', 'enable_table_of_contents');
-    register_setting('tocpro-settings', 'enable_table_label');
-    register_setting('tocpro-settings', 'enable_progress_bar');
-    register_setting('tocpro-settings', 'tocpro_text_color');
-    register_setting('tocpro-settings', 'tocpro_text_size');
-    register_setting('tocpro-settings', 'tocpro_label_size');
-    register_setting('tocpro-settings', 'tocpro_label_color');
-    register_setting('tocpro-settings', 'tocpro_background_color');
-    register_setting('tocpro-settings', 'progress_bar_color');
-    register_setting('tocpro-settings', 'progress_bar_width');
-    register_setting('tocpro-settings', 'tocpro_width');
-    register_setting('tocpro-settings', 'tocpro_min_width');
-    register_setting('tocpro-settings', 'tocpro_max_width');
-    register_setting('tocpro-settings', 'gap_from_top');
-    register_setting('tocpro-settings', 'tocpro_ol_type'); 
-    register_setting('tocpro-settings', 'tocpro_header_label');
-    register_setting('tocpro-settings', 'tocpro_auto_insert_post_types');
-    register_setting('tocpro-settings', 'tocpro_auto_insert_position');
+    $settings = array(
+        'enable_table_of_contents',
+        'enable_table_label',
+        'enable_progress_bar',
+        'tocpro_text_color',
+        'tocpro_text_size',
+        'tocpro_label_size',
+        'tocpro_label_color',
+        'tocpro_background_color',
+        'progress_bar_color',
+        'progress_bar_width',
+        'tocpro_width',
+        'tocpro_min_width',
+        'tocpro_max_width',
+        'gap_from_top',
+        'tocpro_ol_type',
+        'tocpro_header_label',
+        'tocpro_auto_insert_post_types',
+        'tocpro_auto_insert_position',
+        'tocpro_padding_top',
+        'tocpro_padding_bottom',
+        'tocpro_padding_left',
+        'tocpro_padding_right',
+        'tocpro_margin_top',
+        'tocpro_margin_bottom',
+        'tocpro_margin_left',
+        'tocpro_margin_right',
+
+    );
+
+    foreach ($settings as $setting) {
+        register_setting('tocpro-settings', $setting);
+    }
 }
+
 add_action('admin_menu', 'add_plugin_menu');
 add_action('admin_init', 'register_plugin_settings');
-add_filter('the_content', 'generate_table_of_contents'); // Add table of contents
-add_filter('the_content', 'generate_individual_progress_bar'); // Add individual progress bar
+add_filter('the_content', 'generate_table_of_contents'); 
+add_filter('the_content', 'generate_individual_progress_bar'); 
 
 function register_toc_styles() {
     wp_enqueue_style('toc-admin-styles', plugin_dir_url(__FILE__) . 'toc-admin-style.css');
