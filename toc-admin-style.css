@@ -336,3 +336,10 @@ padding-inline-start: 0;
 p.tocpro-table-p{
   margin: 15px 0 0 15px;
 }
+
+.tocpro-table-head{
+  font-size: 20px;
+  color: #e96367;
+  font-weight: 700;
+  margin-bottom:0 ;
+}

@@ -9,20 +9,25 @@ function generate_table_of_contents($content) {
     $auto_insert_position = get_option('tocpro_auto_insert_position', 'before');
     $auto_insert_pages = get_option('tocpro_auto_insert_pages', array());
     $auto_insert_post_types = get_option('tocpro_auto_insert_post_types', array('post'));
+
     // Check if the TOC is enabled and should be inserted
     if (get_option('enable_table_of_contents') == '1' && empty($auto_insert_pages) && empty($auto_insert_post_types)) {
         return $content; // Return the original content if nothing is selected
     }
 
+    // Initialize the $toc variable
+    $toc = '';
+
     // Check if the current page or post type is in the list for auto-insertion
-    if (get_option('enable_table_of_contents') == '1' && (empty($auto_insert_pages) || in_array(get_the_ID(), $auto_insert_pages)) &&
+    if (get_option('enable_table_of_contents') == '1' &&
+        (empty($auto_insert_pages) || in_array(get_the_ID(), $auto_insert_pages)) &&
         (empty($auto_insert_post_types) || in_array(get_post_type(), $auto_insert_post_types))) {
 
         $pattern = '/<h([2-6])[^>]*>.*?<\/h\1>/i';
         preg_match_all($pattern, $content, $matches);
 
         if (!empty($matches[0])) {
-            $toc = '<div class="tocpro tocpro-set-width">';
+            $toc .= '<div class="tocpro tocpro-set-width">';
             if (get_option('enable_table_label') == '1') {
                 $toc .= '<p class="tocpro-table-p">' . esc_attr(get_option('tocpro_header_label')) . '</p>';
             }
@@ -51,7 +56,7 @@ function generate_table_of_contents($content) {
                 }
                 $toc .= '</a>';
 
-                $content= str_replace($matches[0][$index], '<h' . $level . ' id="' . $id . '"> ' . strip_tags($matches[0][$index]) . '</h' . $level . '>', $content);
+                $content = str_replace($matches[0][$index], '<h' . $level . ' id="' . $id . '"> ' . strip_tags($matches[0][$index]) . '</h' . $level . '>', $content);
             }
 
             while (!empty($stack)) {
@@ -164,8 +169,12 @@ function plugin_settings_page() {
             settings_fields('tocpro-settings');
             do_settings_sections('tocpro-settings');
             ?>
-                <div id="genaral" class="table-container" style="display: block;">
+             <div id="genaral" class="table-container" style="display: block;">
             <table class="form-table">
+                
+                <table class="form-table">
+                <h2 class="tocpro-table-head">TABLE OF CONTENTS</h2>
+                
                 <tr valign="top">
                     <th scope="row">Enable Table of Contents</th>
                     <td>
@@ -176,7 +185,7 @@ function plugin_settings_page() {
                     </td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row">Enable Table Label</th>
+                    <th scope="row">Show header</th>
                     <td>
                         <label class="switch">
                             <input type="checkbox" name="enable_table_label" value="1" <?php checked(get_option('enable_table_label'), '1'); ?>>
@@ -184,12 +193,16 @@ function plugin_settings_page() {
                         </label>
                     </td>
                 </tr>
+                
                 <tr valign="top">
                     <th scope="row">Header label</th>
                     <td>
                         <input type="text" class="" name="tocpro_header_label" value="<?php echo esc_attr(get_option('tocpro_header_label')); ?>">
                     </td>
                 </tr>
+                </table>
+                <table class="form-table">
+                <h2 class="tocpro-table-head">APPEARANCE</h2>
                 <tr valign="top">
                     <th scope="row">Width</th>
                     <td>
@@ -217,39 +230,46 @@ function plugin_settings_page() {
                     </td>
                 </tr>
      
+                </table>
+                
                
             </table>
             </div>
             <div id="style" class="table-container">
             <table class="form-table">
-               
+                
+            <table class="form-table">
+                <h2 class="tocpro-table-head">TABLE OF CONTENTS TITLE</h2>
                 <tr valign="top">
-                    <th scope="row">Table label Color</th>
+                    <th scope="row">Table Header Color</th>
                     <td>
                         <input type="text" class="tocpro-color-picker" name="tocpro_label_color" value="<?php echo esc_attr(get_option('tocpro_label_color')); ?>">
                     </td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row">Table label size</th>
+                    <th scope="row">Table Header size</th>
                     <td>
                     <div class="input-with-px">
                         <input type="text"  name="tocpro_label_size" value="<?php echo esc_attr(get_option('tocpro_label_size')); ?>">
                     </div>
                     </td>
                 </tr>
+            </table>
+            <table class="form-table">
+                <h2 class="tocpro-table-head">TABLE OF CONTENTS</h2>
                 <tr valign="top">
                     <th scope="row">Table Text Color</th>
                     <td>
                         <input type="text" class="tocpro-color-picker" name="tocpro_text_color" value="<?php echo esc_attr(get_option('tocpro_text_color')); ?>">
                     </td>
                 </tr>
+                
                 <tr valign="top">
                     <th scope="row">Table Text Size</th>
                     <td>
                         <input type="text" class="" name="tocpro_text_size" value="<?php echo esc_attr(get_option('tocpro_text_size')); ?>">
                     </td>
                 </tr>
-                
                 <tr valign="top">
                     <th scope="row">Table Background Color</th>
                     <td>
@@ -264,7 +284,9 @@ function plugin_settings_page() {
                         </div>
                     </td>
                 </tr>
-
+       
+                <table class="form-table">
+                <h2 class="tocpro-table-head">TABLE STYLE</h2>
                 <tr valign="top">
                     <th scope="row">TOC List Type</th>
                     <td>
@@ -319,12 +341,14 @@ function plugin_settings_page() {
                 </select>
                     </td>
                 </tr>
+                </table>
             </table>
             </div>
 
             <div id="progressbar" class="table-container">
             <table class="form-table">
-   
+            <h2 class="tocpro-table-head">PROGRESSBAR SETTINGS</h2>
+
                 <tr valign="top">
                     <th scope="row">Enable Progress bar</th>
                     <td>
@@ -342,7 +366,7 @@ function plugin_settings_page() {
                     </td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row">Width</th>
+                    <th scope="row">Thickness</th>
                     <td>
                     <div class="input-with-px">
                     <input type="text" class="tocpro-progress-bar-width" name="progress_bar_width" value="<?php echo esc_attr(get_option('progress_bar_width')); ?>">
@@ -354,6 +378,8 @@ function plugin_settings_page() {
             </div> 
             <div id="autoinsert" class="table-container">
             <table class="form-table">
+            <table class="form-table">
+                <h2 class="tocpro-table-head">AUTO INSERT SETTINGS</h2>
             <tr valign="top">
                 <th scope="row">Auto Insert TOC</th>
                 <td class="tocpro-td">
@@ -388,7 +414,7 @@ function plugin_settings_page() {
                 </td>
             </tr>
 
-
+                </table>
             </table>
 
             </div>
