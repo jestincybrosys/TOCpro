@@ -105,22 +105,6 @@ function plugin_settings_page() {
         <div class="wrap tocpro-main">
 
         <div class="tocpro-head"><h2>TOCPro Settings</h2><p>Globel Settings</p></div>
-        <!-- <?php
-            if (isset($_GET['settings-updated']) && $_GET['settings-updated']) {
-                echo '<div class="toast">
-                <div class="toast-content">
-                <img width="20px" src="' . plugins_url('assets/accept.svg', __FILE__) . '" alt="Icon" />
-                <div class="message">
-                    <span class="message-text text-1">Success</span>
-                    <span class="message-text text-2">Your changes have been saved</span>
-                </div>
-                </div>
-                <img class="toast-close" width="10px" src="' . plugins_url('assets/close.svg', __FILE__) . '" alt="Icon" />
-
-                <div class="progress"></div>
-            </div>';
-            }
-        ?> -->
         <script>
             var activeLink = document.querySelector('.tacpro-link.active');
 
@@ -466,33 +450,6 @@ function plugin_settings_page() {
     </div>
         </div>
     </div>
-    <script>
-            var toast = document.querySelector(".toast");
-            var btn = document.querySelector(".toast-btn");
-            var close = document.querySelector(".toast-close");
-            var progress = document.querySelector(".progress");
-
-            btn.addEventListener("click", () =>{
-            toast.classList.add("active");
-            progress.classList.add("active");
-
-            setTimeout(() =>{
-                toast.classList.remove("active");
-            }, 2000)
-
-            setTimeout(() =>{
-                progress.classList.remove("active");
-            }, 2300)
-            })
-
-            close.addEventListener("click", () =>{
-            toast.classList.remove("active");
-
-            setTimeout(() =>{
-                progress.classList.remove("active");
-            }, 300)
-            })
-        </script>
 
     <?php
 }
