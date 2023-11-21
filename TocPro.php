@@ -622,6 +622,52 @@ function register_toc_script() {
 add_action('wp_enqueue_scripts', 'register_toc_script');
 
 function toc_shortcode() {
+    $content = get_the_content();
+    $pattern = '/<h([2-6])[^>]*>.*?<\/h\1>/i';
+    preg_match_all($pattern, $content, $matches);
+
+    if (!empty($matches[0])) {
+        $toc = '<div class="tocpro tocpro-set-width">';
+        $toc .= '<ol style="padding-inline-start: 0; margin-top:0;" type="' . esc_attr(get_option('tocpro_ol_type')) . '">';
+
+        $stack = array();
+        foreach ($matches[1] as $index => $level) {
+            $id = 'toc-' . sanitize_title_with_dashes(strip_tags($matches[0][$index]));
+            $headingText = strip_tags($matches[0][$index]);
+            $words = explode(' ', $headingText);
+            $shortenedText = implode(' ', array_slice($words, 0, 5));
+            $hasMoreContent = count($words) > 5;
+
+            while ($level > end($stack)) {
+                $toc .= '<ol class="custom-ol"  type="' . esc_attr(get_option('tocpro_ol_type')) . '">';
+                array_push($stack, $level);
+            }
+
+            while ($level < end($stack)) {
+                $toc .= '</ol></li>';
+                array_pop($stack);
+            }
+
+            $toc .= '<li><div><a href="#' . $id . '">' . $shortenedText;
+            if ($hasMoreContent) {
+                $toc .= '...';
+            }
+            $toc .= '</a></div>';
+
+            $content = str_replace($matches[0][$index], '<h' . $level . ' id="' . $id . '"> ' . strip_tags($matches[0][$index]) . '</h' . $level . '>', $content);
+        }
+
+        while (!empty($stack)) {
+            $toc .= '</ol>';
+            array_pop($stack);
+        }
+
+        $toc .= '</ol></div>';
+        return $toc;
+    }
+
+    return ''; // Return an empty string if no headings are found.
 }
+
 add_shortcode('table_of_contents', 'toc_shortcode');
 
